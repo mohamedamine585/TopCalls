@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
                           children: [
                             Container(
                               width: 25,
-                              child: (index == 0)?Icon(Icons.favorite):Text("  $index"),
+                              child: (index == 0)?Icon(Icons.favorite):Text("  ${index - 1 }"),
                             ),
                             SizedBox(width: 10,),
                             Container(
