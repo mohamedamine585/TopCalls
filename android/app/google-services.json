@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "943748900790",
+    "project_id": "topcalls-5d95f",
+    "storage_bucket": "topcalls-5d95f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943748900790:android:8d8978bd9d9c447a490317",
+        "android_client_info": {
+          "package_name": "com.example.topcalls"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "943748900790-041mmo1f4hjjqa3el00as4k08jmi2u18.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpRgWehGXWjFCf2_-2Ifmy3sDnPnnmQyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "943748900790-041mmo1f4hjjqa3el00as4k08jmi2u18.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

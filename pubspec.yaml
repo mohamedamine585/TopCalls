@@ -37,7 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_phone_state: ^0.5.9
   call_log: ^4.0.0
-
+  realm: ^0.0.1
+  device_info: ^2.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -39,21 +39,60 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
+        drawer: NavigationDrawer(children: [
+          TextButton(
+              style: ButtonStyle(
+                iconColor: MaterialStateProperty.all(Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil("Homepage", (route) => false);
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.home),
+                  SizedBox(
+                    width: 100,
+                  ),
+                  Text(
+                    "Home",
+                    style: TextStyle(color: Colors.black),
+                  )
+                ],
+              )),
+          TextButton(
+              style: ButtonStyle(
+                iconColor: MaterialStateProperty.all(Colors.black),
+              ),
+              onPressed: () {},
+              child: Row(
+                children: [
+                  Icon(Icons.today),
+                  SizedBox(
+                    width: 75,
+                  ),
+                  Text(
+                    "Today's activity",
+                    style: TextStyle(color: Colors.black),
+                  )
+                ],
+              ))
+        ]),
         body: FutureBuilder(
-          future: callsService.fetch_top_cotnact(),
+          future: callsService.fetch_top_contact(),
           builder:
               (BuildContext context, AsyncSnapshot<List<Contact>> snapshot) {
             if (snapshot.data?.isNotEmpty ?? false) {
               int totald;
               List<Contact> data = snapshot.data!
-                      .where((element) =>
-                          (checked ? (element.contact.length <= 3) : true))
-                      .toList() ??
-                  [];
+                  .where((element) =>
+                      (checked ? (element.contact.length <= 3) : true))
+                  .toList();
+
               return ListView.builder(
-                itemCount: data?.length,
+                itemCount: data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  totald = (data?.elementAt(index).totalduration ?? 0);
+                  totald = (data.elementAt(index).totalduration);
                   return Container(
                     child: Card(
                       color: (index == 0)
@@ -65,7 +104,7 @@ class _HomeState extends State<Home> {
                             width: 25,
                             child: (index == 0)
                                 ? Icon(Icons.favorite)
-                                : Text("  ${index - 1}"),
+                                : Text("  ${index + 1}"),
                           ),
                           SizedBox(
                             width: 10,
@@ -73,7 +112,7 @@ class _HomeState extends State<Home> {
                           Container(
                               width: 120,
                               child: Text(
-                                "N: " + (data?.elementAt(index).contact ?? ""),
+                                "N: " + (data.elementAt(index).contact),
                                 softWrap: true,
                               )),
                           Container(
@@ -91,7 +130,7 @@ class _HomeState extends State<Home> {
                             width: 100,
                             child: Text(
                               " last call : " +
-                                  (data?.elementAt(index).lastcall).toString(),
+                                  (data.elementAt(index).lastcall).toString(),
                               softWrap: true,
                             ),
                           )
@@ -106,7 +145,12 @@ class _HomeState extends State<Home> {
                   onRefresh: () async {
                     setState(() {});
                   },
-                  child: CircularProgressIndicator());
+                  child: Center(
+                    child: Text(
+                      "No data found ",
+                      style: TextStyle(color: Colors.black, fontSize: 30),
+                    ),
+                  ));
             }
           },
         ),

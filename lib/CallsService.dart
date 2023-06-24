@@ -2,7 +2,7 @@ import 'package:topcalls/Call.dart';
 import 'package:call_log/call_log.dart';
 
 class CallsService {
-  Future<List<Contact>>? fetch_top_cotnact() async {
+  Future<List<Contact>>? fetch_top_contact() async {
     try {
       Iterable<CallLogEntry> entries = await CallLog.get();
       entries = await CallLog.query();
@@ -24,6 +24,12 @@ class CallsService {
         listcontact.add(value);
       });
       listcontact.sort((a, b) => b.totalduration.compareTo(a.totalduration));
+      List<String> list = [];
+      listcontact.forEach(
+        (element) {
+          list.add(element.contact);
+        },
+      );
       return listcontact;
     } catch (e) {
       print(e);
