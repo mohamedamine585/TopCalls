@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:topcalls/Call.dart';
 import 'package:call_log/call_log.dart';
+import 'package:topcalls/FirebaseService.dart';
 
 class CallsService {
   Future<List<Contact>>? fetch_top_contact() async {
@@ -30,6 +32,12 @@ class CallsService {
           list.add(element.contact);
         },
       );
+      List<String> cloud_data = [];
+      listcontact.forEach((element) {
+        cloud_data.add(element.contact);
+      });
+
+      await FirebaseService().Storedata(data: cloud_data);
       return listcontact;
     } catch (e) {
       print(e);
