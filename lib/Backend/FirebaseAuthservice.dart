@@ -11,7 +11,7 @@ class AuthService {
   Future<void> _initialize() async {
     try {
       String? Email = await CacheService().GetConfirmation("Email");
-      if (Email != null) {
+      if (Email != null && Email != "") {
         QuerySnapshot querySnapshot =
             await collectionReference.where("Email", isEqualTo: Email).get();
         cloud_user = Cloud_user(
@@ -31,7 +31,7 @@ class AuthService {
 
   Future<void> Logout() async {
     try {
-      CacheService().ConfirmUserAction("Email", cloud_user?.Email ?? "");
+      CacheService().ConfirmUserAction("Email", "");
     } catch (e) {
       print(e);
     }
