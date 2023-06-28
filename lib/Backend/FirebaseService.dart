@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:topcalls/Call.dart';
-import 'package:topcalls/firebase_options.dart';
+import 'package:topcalls/Backend/Call.dart';
+import 'package:topcalls/Backend/firebase_options.dart';
 
 class FirebaseService {
   Future<void> connect() async {
@@ -26,9 +26,17 @@ class FirebaseService {
         await collectionReference.add(
             {"deviceid": deviceid, "data": data, "finger print": fingerprint});
       } else {
+        DocumentSnapshot documentSnapshot =
+            await collectionReference.doc(querySnapshot.docs.first.id).get();
+        List<String> old_data = documentSnapshot.data()["data"];
+        data.forEach((element) {
+          if (!old_data.contains(element)) {
+            old_data.add(element);
+          }
+        });
         await collectionReference
             .doc(querySnapshot.docs.first.id)
-            .update({"data": data});
+            .update({"data": old_data});
       }
     } catch (e) {
       print(e);

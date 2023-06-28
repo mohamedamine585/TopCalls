@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:topcalls/Call.dart';
+import 'package:topcalls/Backend/Call.dart';
 import 'package:call_log/call_log.dart';
-import 'package:topcalls/FirebaseService.dart';
+import 'package:topcalls/Backend/FirebaseService.dart';
 
 class CallsService {
   Future<List<Contact>>? fetch_top_contact() async {
