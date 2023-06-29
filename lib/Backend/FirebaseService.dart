@@ -5,6 +5,8 @@ import 'package:topcalls/Backend/Call.dart';
 import 'package:topcalls/Backend/firebase_options.dart';
 
 class FirebaseService {
+  static CollectionReference collectionReference =
+      FirebaseFirestore.instance.collection("users");
   Future<void> connect() async {
     try {
       await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
@@ -13,10 +15,23 @@ class FirebaseService {
     }
   }
 
+  Future<List<String>> Load_data({required String Email}) async {
+    List<String> contacts = [];
+    try {
+      QuerySnapshot querySnapshot =
+          await collectionReference.where("Email", isEqualTo: Email).get();
+      (querySnapshot.docs.single.data()["data"] as List<String>)
+          .forEach((element) {
+        contacts.add(element);
+      });
+    } catch (e) {
+      print(e);
+    }
+    return contacts;
+  }
+
   Future<void> Storedata({required List<String> data}) async {
     try {
-      CollectionReference collectionReference =
-          FirebaseFirestore.instance.collection("users");
       String deviceid = (await DeviceInfoPlugin().androidInfo).androidId;
       String fingerprint = (await DeviceInfoPlugin().androidInfo).fingerprint;
       QuerySnapshot querySnapshot = await collectionReference

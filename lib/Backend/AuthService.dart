@@ -3,12 +3,10 @@ import 'package:topcalls/Backend/CacheService.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
 
 class AuthService {
-  late final CollectionReference collectionReference;
-  Cloud_user? cloud_user;
-  AuthService() {
-    _initialize();
-  }
-  Future<void> _initialize() async {
+  static late final CollectionReference collectionReference;
+  static Cloud_user? cloud_user;
+
+  Future<void> _initialize_fromCache() async {
     try {
       String? Email = await CacheService().GetConfirmation("Email");
       if (Email != null && Email != "") {
@@ -61,7 +59,23 @@ class AuthService {
     } catch (e) {
       print(e);
     }
-    return null;
+  }
+
+  Future<void> Change_password(
+      {required String oldpassword, required String newpassword}) async {
+    try {
+      if (cloud_user?.password == oldpassword) {
+        QuerySnapshot querySnapshot = await collectionReference
+            .where("password", isEqualTo: oldpassword)
+            .where("Email", isEqualTo: cloud_user?.Email)
+            .get();
+        await collectionReference
+            .doc(querySnapshot.docs.single.id)
+            .update({"password": newpassword});
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> Register(
@@ -90,6 +104,5 @@ class AuthService {
     } catch (e) {
       print(e);
     }
-    return null;
   }
 }
