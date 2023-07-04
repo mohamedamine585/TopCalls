@@ -1,14 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:topcalls/Frontend/Home.dart';
+import 'package:topcalls/Frontend/RegisterDialog.dart';
+import 'package:topcalls/Frontend/Sync&Cloud.dart';
 
-void main() async {
+import 'Backend/firebase_options.dart';
+
+void main() {
   runApp(MaterialApp(
     routes: {
-      "Homepage": (context) => Home(),
+      "Homepage": (context) => const Home(),
+      "Clouddata": (context) => const CloudContacts(),
+      "Register": (context) => RegisterDialog(),
     },
     debugShowCheckedModeBanner: false,
     title: 'TopCalls',
     color: Colors.black,
-    home: Home(),
+    initialRoute: "Homepage",
   ));
 }

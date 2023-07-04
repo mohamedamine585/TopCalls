@@ -1,41 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:topcalls/Backend/CacheService.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
 
 class AuthService {
-  static late final CollectionReference collectionReference;
-  static Cloud_user? cloud_user;
+  AuthService() {}
 
-  Future<void> _initialize_fromCache() async {
+  late final CollectionReference collectionReference;
+
+  Cloud_user? cloud_user;
+
+  Future<void> initialize_Cloud_and_Cache(
+      {required CollectionReference collectionReference}) async {
     try {
-      String? Email = await CacheService().GetConfirmation("Email");
+      String? Email = await CacheService().ProoveUserAuthentication("Email");
       if (Email != null && Email != "") {
         QuerySnapshot querySnapshot =
             await collectionReference.where("Email", isEqualTo: Email).get();
         cloud_user = Cloud_user(
             Email: Email,
             password: querySnapshot.docs.single.data()["password"],
-            Contact_number:
-                (querySnapshot.docs.single.data()["data"] as List<String>)
-                    .length,
+            Contact_number: (querySnapshot.docs.single.data()["data"]).length,
             isEmailverified:
                 querySnapshot.docs.single.data()["isEmailverified"]);
+      } else {
+        cloud_user = null;
       }
     } catch (e) {
+      cloud_user = null;
       print(e);
     }
-    cloud_user = null;
   }
 
   Future<void> Logout() async {
     try {
-      CacheService().ConfirmUserAction("Email", "");
+      CacheService().ConfirmuserAction("Email", "");
     } catch (e) {
       print(e);
     }
   }
 
   Future<void> Login({
+    required CollectionReference collectionReference,
     required String Email,
     required String password,
   }) async {
@@ -49,12 +55,10 @@ class AuthService {
         cloud_user = Cloud_user(
             Email: Email,
             password: password,
-            Contact_number:
-                (querySnapshot.docs.first.data()["data"] as List<String>)
-                    .length,
+            Contact_number: (querySnapshot.docs.first.data()["data"]).length,
             isEmailverified:
                 querySnapshot.docs.single.data()["isEmailverified"]);
-        CacheService().ConfirmUserAction("Email", Email);
+        CacheService().ConfirmuserAction("Email", Email);
       }
     } catch (e) {
       print(e);
@@ -62,7 +66,9 @@ class AuthService {
   }
 
   Future<void> Change_password(
-      {required String oldpassword, required String newpassword}) async {
+      {required collectionReference,
+      required String oldpassword,
+      required String newpassword}) async {
     try {
       if (cloud_user?.password == oldpassword) {
         QuerySnapshot querySnapshot = await collectionReference
@@ -78,15 +84,17 @@ class AuthService {
     }
   }
 
-  Future<void> Register(
-      {required String deviceid,
-      required String Email,
-      required String password,
-      required CollectionReference collectionReference}) async {
+  Future<void> Register({
+    required CollectionReference collectionReference,
+    required String deviceid,
+    required String Email,
+    required String password,
+  }) async {
     try {
       QuerySnapshot querySnapshot0 = await collectionReference
           .where("deviceid", isEqualTo: deviceid)
           .get();
+
       QuerySnapshot querySnapshot1 =
           await collectionReference.where("Email", isEqualTo: Email).get();
       if (querySnapshot1.docs.isEmpty) {
@@ -95,12 +103,10 @@ class AuthService {
         cloud_user = Cloud_user(
             Email: Email,
             password: password,
-            Contact_number:
-                (querySnapshot0.docs.first.data()["data"] as List<String>)
-                    .length,
+            Contact_number: (querySnapshot0.docs.first.data()["data"]).length,
             isEmailverified: false);
-        CacheService().ConfirmUserAction("Email", Email);
-      }
+        CacheService().ConfirmuserAction("Email", Email);
+      } else {}
     } catch (e) {
       print(e);
     }

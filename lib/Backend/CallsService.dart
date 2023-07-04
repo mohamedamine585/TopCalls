@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:topcalls/Backend/Call.dart';
+import 'package:topcalls/Backend/Contact.dart';
 import 'package:call_log/call_log.dart';
 import 'package:topcalls/Backend/FirebaseService.dart';
 
@@ -19,7 +19,10 @@ class CallsService {
             dateTime = c0.lastcall;
           }
         }
-        callsmap[element.number ?? ""] = Contact(element.number ?? "", dateTime,
+        callsmap[element.number ?? ""] = Contact(
+            element.number ?? "",
+            element.name ?? "",
+            dateTime,
             (c0?.totalduration ?? 0) + (element.duration ?? 0));
       });
       callsmap.forEach((key, value) {

@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:topcalls/Backend/Call.dart';
+import 'package:topcalls/Backend/AuthService.dart';
+import 'package:topcalls/Backend/Contact.dart';
 import 'package:topcalls/Backend/CallsService.dart';
 import 'package:topcalls/Backend/FirebaseService.dart';
 
@@ -16,9 +17,14 @@ class _HomeState extends State<Home> {
   @override
   bool checked = false;
   CallsService callsService = CallsService();
+
   Widget build(BuildContext context) {
+    AuthService? authservice =
+        (ModalRoute.of(context)?.settings.arguments as AuthService?);
+    AuthService authService =
+        (authservice != null) ? authservice : AuthService();
     return FutureBuilder(
-        future: FirebaseService().connect(),
+        future: FirebaseService().connect(authService: authService),
         builder: (context, snapshot) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -70,16 +76,18 @@ class _HomeState extends State<Home> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          "Daily activity", (route) => false);
+                          "Clouddata",
+                          arguments: authService,
+                          (route) => false);
                     },
                     child: Row(
                       children: [
-                        Icon(Icons.today),
+                        Icon(Icons.cloud),
                         SizedBox(
                           width: 75,
                         ),
                         Text(
-                          "Today's activity",
+                          "Cloud data",
                           style: TextStyle(color: Colors.black),
                         )
                       ],
