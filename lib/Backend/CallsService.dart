@@ -1,15 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:topcalls/Backend/Contact.dart';
 import 'package:call_log/call_log.dart';
-import 'package:topcalls/Backend/FirebaseService.dart';
+import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
+import 'package:topcalls/OldBackend/OldFirebaseService.dart';
 
 class CallsService {
   Future<List<Contact>>? fetch_top_contact() async {
+    List<Contact> listcontact = [];
     try {
       Iterable<CallLogEntry> entries = await CallLog.get();
       entries = await CallLog.query();
       Map<String, Contact> callsmap = {};
-      List<Contact> listcontact = [];
+
       entries.forEach((element) {
         Contact? c0 = callsmap[element.number ?? ""];
         DateTime dateTime =
@@ -19,6 +21,7 @@ class CallsService {
             dateTime = c0.lastcall;
           }
         }
+        
         callsmap[element.number ?? ""] = Contact(
             element.number ?? "",
             element.name ?? "",
@@ -30,6 +33,7 @@ class CallsService {
       });
       listcontact.sort((a, b) => b.totalduration.compareTo(a.totalduration));
       List<String> list = [];
+
       listcontact.forEach(
         (element) {
           list.add(element.contact);
@@ -40,11 +44,10 @@ class CallsService {
         cloud_data.add(element.contact);
       });
 
-      await FirebaseService().Storedata(data: cloud_data);
-      return listcontact;
+      await FirebaseServiceProvider().Store_data(data: cloud_data);
     } catch (e) {
       print(e);
     }
-    return [];
+    return listcontact;
   }
 }

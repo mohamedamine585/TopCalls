@@ -13,11 +13,19 @@ class RegisterDialog extends StatefulWidget {
 }
 
 class _RegisterDialogState extends State<RegisterDialog> {
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController cnfpassword = TextEditingController();
-  CollectionReference collectionReference =
+  late TextEditingController email;
+  late TextEditingController password;
+  late TextEditingController cnfpassword;
+  late CollectionReference collectionReference =
       FirebaseFirestore.instance.collection("users");
+  @override
+  void initState() {
+    email = TextEditingController();
+    password = TextEditingController();
+    cnfpassword = TextEditingController();
+    super.initState();
+  }
+
   @override
   void dispose() {
     email.dispose();
@@ -139,10 +147,7 @@ class _RegisterDialogState extends State<RegisterDialog> {
                           onPressed: () async {
                             String deviceid = DEVICE_ID ?? "";
                             await authService?.Register(
-                                collectionReference: collectionReference,
-                                deviceid: deviceid,
-                                Email: email.text,
-                                password: password.text);
+                                Email: email.text, password: password.text);
                             if (authService?.cloud_user != null) {
                               print(authService?.cloud_user?.Email);
                             } else {}

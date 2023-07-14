@@ -5,10 +5,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:topcalls/Backend/AuthService.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
+import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 
 import '../Backend/Contact.dart';
-import '../Backend/FirebaseService.dart';
+import '../OldBackend/OldFirebaseService.dart';
 
 class CloudContacts extends StatefulWidget {
   const CloudContacts({super.key});
@@ -88,7 +89,7 @@ class _CloudContactsState extends State<CloudContacts> {
         backgroundColor: Color.fromARGB(255, 176, 172, 163),
         body: (authService.cloud_user != null)
             ? FutureBuilder(
-                future: FirebaseService()
+                future: FirebaseServiceProvider()
                     .Load_data(Email: authService.cloud_user?.Email ?? ""),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<String>> snapshot) {

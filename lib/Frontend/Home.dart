@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:topcalls/Backend/AuthService.dart';
 import 'package:topcalls/Backend/Contact.dart';
 import 'package:topcalls/Backend/CallsService.dart';
-import 'package:topcalls/Backend/FirebaseService.dart';
+import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
+import 'package:topcalls/OldBackend/OldFirebaseService.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,8 +24,9 @@ class _HomeState extends State<Home> {
         (ModalRoute.of(context)?.settings.arguments as AuthService?);
     AuthService authService =
         (authservice != null) ? authservice : AuthService();
+    print(authService.cloud_user);
     return FutureBuilder(
-        future: FirebaseService().connect(authService: authService),
+        future: FirebaseServiceProvider().connect(authService: authService),
         builder: (context, snapshot) {
           return RefreshIndicator(
             onRefresh: () async {

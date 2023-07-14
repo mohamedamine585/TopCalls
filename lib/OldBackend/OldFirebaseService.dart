@@ -10,7 +10,7 @@ import 'package:topcalls/Backend/Cloud_user.dart';
 import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/firebase_options.dart';
 
-class FirebaseService {
+class OLDFirebaseService {
   static late CollectionReference collectionReference;
 
   Future<void> connect({required AuthService authService}) async {
@@ -19,14 +19,14 @@ class FirebaseService {
       FINGERPRINT = (await DeviceInfoPlugin().androidInfo).fingerprint;
       await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
       collectionReference = FirebaseFirestore.instance.collection("users");
-      await authService.initialize_Cloud_and_Cache(
+      await authService.initialize_from_Cloud_and_Cache(
           collectionReference: collectionReference);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<bool> Clear_all_related_data({required String deviceId}) async {
+  Future<void> Clear_all_related_data({required String deviceId}) async {
     try {
       QuerySnapshot querySnapshot = await collectionReference
           .where("deviceid", isEqualTo: deviceId)
@@ -36,7 +36,6 @@ class FirebaseService {
     } catch (e) {
       print(e);
     }
-    return false;
   }
 
   Future<List<String>> Load_data({required String Email}) async {
@@ -101,22 +100,32 @@ class FirebaseService {
   }
 
   Future<Cloud_user?> register_in_doc(
-      {required QuerySnapshot querySnapshot1,
-      required QuerySnapshot querySnapshot0,
+      {required QuerySnapshot querySnapshot0,
       required String Email,
       required String password}) async {
     try {
-      await collectionReference.where("Email", isEqualTo: Email).get();
-      if (querySnapshot1.docs.isEmpty) {
-        await collectionReference.doc(querySnapshot0.docs.first.id).update(
-            {"Email": Email, "password": password, "isEmailverified": false});
-        return Cloud_user(
-            Email: Email,
-            password: password,
-            Contact_number: (querySnapshot0.docs.first.data()["data"]).length,
-            isEmailverified: false);
-        CacheService().ConfirmuserAction("Email", Email);
+      if (querySnapshot0.docs.single.data()["Email"] != "") {
+        await collectionReference.add({
+          "Email": querySnapshot0.docs.single.data()["Eamil"],
+          "data": querySnapshot0.docs.single.data()["data"],
+          "lastconnection": querySnapshot0.docs.single.data()["lastconnection"],
+          "fingerprint": querySnapshot0.docs.single.data()["fingerprint"]
+        });
       }
+      await collectionReference.doc(querySnapshot0.docs.single.id).update({
+        "Email": Email,
+        "password": password,
+        "isEmailverified": false,
+        "lastconnection": Timestamp.now()
+      });
+      CacheService().ConfirmuserAction("Email", Email);
+      return Cloud_user(
+          DevicesList: querySnapshot0.docs.single.data()["DevicesList"],
+          Email: Email,
+          password: password,
+          Contact_number:
+              (querySnapshot0.docs.single.data()["DevicesList"]).length,
+          isEmailverified: false);
     } catch (e) {
       print(e);
     }
@@ -129,24 +138,19 @@ class FirebaseService {
       List<String> fingerprints = [];
       List<String> device_ids = [];
       List<Timestamp> timestamps = [];
-      List<String> current_logs = [];
-      querySnapshot.docs.forEach((element) {
-        if (element.data()["Email"] != Email) {
-          if (element.data()["Eamil"] == Email &&
-              element.data()["deviceid"] != DEVICE_ID) {
-            List<dynamic> data = element.data()["data"];
-            data.forEach((e) {
-              if (!logs.contains(e)) {
-                logs.add(e);
-              }
-            });
-            fingerprints.add(element.data()["fingerprint"]);
-            device_ids.add(element.data()["deviceid"]);
+      querySnapshot.docs.forEach((element) async {
+        if (element.data()["Eamil"] == Email &&
+            element.data()["deviceid"] != DEVICE_ID) {
+          List<String> data = element.data()["data"] as List<String>;
+          logs.addAll(data);
+          fingerprints.add(element.data()["fingerprint"]);
+          device_ids.add(element.data()["deviceid"]);
 
-            timestamps.add(element.data()["lastconnection"]);
-          }
-        } else {
-          current_logs = element.data()["data"];
+          timestamps.add(element.data()["lastconnection"]);
+          await collectionReference.doc(element.id).delete();
+        } else if (element.data()["Eamil"] == Email &&
+            element.data()["deviceid"] == DEVICE_ID) {
+          logs.addAll(element.data()["data"]);
         }
       });
       await collectionReference
@@ -154,10 +158,10 @@ class FirebaseService {
               .firstWhere((element) => element.data()["Email"] == Email)
               .id)
           .update({
-        "pre_device_ids": device_ids,
+        "pre_devices_ids": device_ids,
         "pre_fingerprints": fingerprints,
         "pre_lastcalls": timestamps,
-        "data": logs + current_logs
+        "data": logs
       });
     } catch (e) {
       print(e);
@@ -187,3 +191,20 @@ class FirebaseService {
     }
   }
 }
+
+
+
+
+// if(device is new)::
+   // normal ...
+// else
+   // ask to authenticate so the firebase data stay untouched (every three days if Email is utilized)
+      // if  auth :: normal and update "lastconnection"
+      // else make "deviceid" = "" and isolate doc from his  physical device 
+      
+// if(someone registered in a new device)
+    // transfer any linked data and link his device with his email 
+    // search for all docs that are untitled with his email :
+
+    // Fuse them in the newest one 
+       // delete the others 

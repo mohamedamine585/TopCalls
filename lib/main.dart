@@ -7,7 +7,7 @@ import 'package:topcalls/Frontend/Sync&Cloud.dart';
 
 import 'Backend/firebase_options.dart';
 
-void main() {
+void main() async {
   runApp(MaterialApp(
     routes: {
       "Homepage": (context) => const Home(),
