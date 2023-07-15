@@ -146,10 +146,16 @@ class _RegisterDialogState extends State<RegisterDialog> {
                       child: TextButton(
                           onPressed: () async {
                             String deviceid = DEVICE_ID ?? "";
-                            await authService?.Register(
-                                Email: email.text, password: password.text);
+                            if (password.text == cnfpassword.text) {
+                              await authService?.Register(
+                                  Email: email.text, password: password.text);
+                            }
                             if (authService?.cloud_user != null) {
-                              print(authService?.cloud_user?.Email);
+                              print("dsq");
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  "Clouddata",
+                                  arguments: authService,
+                                  (route) => false);
                             } else {}
                           },
                           child: const Text("Register"))),

@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -82,7 +83,9 @@ class FirebaseServiceProvider {
 
         if (devlist != null) {
           devlist.forEach((element) {
-            contacts.add(element);
+            if (!contacts.contains(element)) {
+              contacts.add(element);
+            }
           });
         }
       }
@@ -122,29 +125,24 @@ class FirebaseServiceProvider {
 
       if (querydevice.docs.single.data()["owner"] != Email &&
           querydevice.docs.single.data()["owner"] != "") {
-        await devicescollection.add({
-          "owner": querydevice.docs.first.data()["owner"],
+        email = querydevice.docs.first.data()["owner"];
+        DocumentReference newotherdoc = await devicescollection.add({
+          "owner": email,
           "logs": querydevice.docs.first.data()["logs"],
           "Deviceid": "",
         });
-
-        email = querydevice.docs.first.data()["owner"];
-        print("object");
-        List<String> DevicesList = [];
-        (await queryuser.docs.first.data()["DevicesList"] as List<dynamic>)
-            .forEach((element) {
-          DevicesList.add(element);
-        });
-        List<dynamic> what_to_add;
-        if (DevicesList.contains(querydevice.docs.first.id)) {
-          what_to_add = [];
-        } else {
-          what_to_add = [querydevice.docs.first.id];
-        }
-
-        await userscollection.doc(queryuser.docs.first.id).update({
+        await userscollection
+            .doc((await userscollection.where("Email", isEqualTo: email).get())
+                .docs
+                .single
+                .id)
+            .update({
           "DevicesList":
-              queryuser.docs.first.data()["DevicesList"] + what_to_add
+              (await userscollection.where("Email", isEqualTo: email).get())
+                      .docs
+                      .single
+                      .data()["DevicesList"] +
+                  [newotherdoc.id]
         });
 
         await remove_doc_from_user(
@@ -153,6 +151,21 @@ class FirebaseServiceProvider {
             deviceid: querydevice.docs.first.id,
             userscollection: userscollection);
       }
+      List<String> DevicesList = [];
+      (await queryuser.docs.first.data()["DevicesList"] as List<dynamic>)
+          .forEach((element) {
+        DevicesList.add(element);
+      });
+      List<dynamic> what_to_add;
+      if (DevicesList.contains(querydevice.docs.first.id)) {
+        what_to_add = [];
+      } else {
+        what_to_add = [querydevice.docs.first.id];
+      }
+      print(what_to_add);
+      await userscollection.doc(queryuser.docs.first.id).update({
+        "DevicesList": queryuser.docs.first.data()["DevicesList"] + what_to_add
+      });
       await devicescollection
           .doc(querydevice.docs.first.id)
           .update({"owner": Email});
@@ -168,14 +181,15 @@ class FirebaseServiceProvider {
       required CollectionReference userscollection}) async {
     try {
       QueryDocumentSnapshot old_owner =
-          docs.where((element) => element.data()["Email"] == Email).single;
+          (await userscollection.where("Email", isEqualTo: Email).get())
+              .docs
+              .single;
 
       List<dynamic> old_devices = old_owner.data()["DevicesList"];
-      old_devices.forEach((element) {
-        if (element == deviceid) {
-          old_devices.remove(element);
-        }
-      });
+
+      old_devices.removeWhere((element) => element == deviceid);
+      print(deviceid);
+
       await userscollection
           .doc((await userscollection.where("Email", isEqualTo: Email).get())
               .docs

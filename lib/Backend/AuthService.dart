@@ -109,13 +109,18 @@ class AuthService {
 
       CacheService().ConfirmuserAction("Email", Email);
 
+      List<String> devlist = [];
+      (querySnapshot0?.docs.single.data()["DevicesList"] as List<dynamic>)
+          .forEach((element) {
+        devlist.add(element);
+      });
+
       if (querySnapshot0 != null) {
         cloud_user = Cloud_user(
             Email: Email,
-            DevicesList: querySnapshot0.docs.single.data()["DevicesList"],
+            DevicesList: devlist,
             password: password,
-            Contact_number:
-                (querySnapshot0.docs.single.data()["DevicesList"]).length,
+            Contact_number: devlist.length,
             isEmailverified:
                 querySnapshot0.docs.single.data()["isEmailverified"]);
       } else {
