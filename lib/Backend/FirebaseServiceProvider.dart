@@ -123,8 +123,8 @@ class FirebaseServiceProvider {
       QuerySnapshot querydevice =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
 
-      if (querydevice.docs.single.data()["owner"] != Email &&
-          querydevice.docs.single.data()["owner"] != "") {
+      if (querydevice.docs.first.data()["owner"] != Email &&
+          querydevice.docs.first.data()["owner"] != "") {
         email = querydevice.docs.first.data()["owner"];
         DocumentReference newotherdoc = await devicescollection.add({
           "owner": email,
