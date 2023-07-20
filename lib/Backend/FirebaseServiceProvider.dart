@@ -6,9 +6,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:topcalls/Backend/AuthService.dart';
 import 'package:topcalls/Backend/CacheService.dart';
+import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/DeviceSystemServiceProvider.dart';
 import 'package:topcalls/Backend/firebase_options.dart';
+import 'package:topcalls/Frontend/Sync&Cloud.dart';
 
 class FirebaseServiceProvider {
   static late CollectionReference userscollection, devicescollection;
@@ -26,11 +28,11 @@ class FirebaseServiceProvider {
     }
   }
 
+  // outdated
   Future<void> Store_data({required List<String> data}) async {
     try {
       QuerySnapshot querySnapshot =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
-
       if (querySnapshot.docs.isEmpty) {
         FirebaseServiceProvider().adddevicedoc(logs: data);
       } else {
@@ -66,6 +68,50 @@ class FirebaseServiceProvider {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> store_cloud_logs({required List<Cloud_Log> cloud_logs}) async {
+    try {
+      QuerySnapshot querydevice =
+          await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
+      if (querydevice.docs.isEmpty) {
+        await adddevicedoc(logs: logs);
+      } else {
+        await updatedevicedoc(logs: logs, docid: docid);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<List<Cloud_Log>> load_cloud_logs({required String Email}) async {
+    List<Cloud_Log> cloud_contacts = [];
+    try {
+      QuerySnapshot queryuser =
+          await userscollection.where("Email", isEqualTo: Email).get();
+      QueryDocumentSnapshot queryDocumentSnapshot;
+      List<String> logs = [];
+      (queryuser.docs.first.data()["logs"] as List<dynamic>).forEach((element) {
+        logs.add(element);
+      });
+      List<String> names = [];
+      (queryuser.docs.first.data()["names"] as List<dynamic>)
+          .forEach((element) {
+        names.add(element);
+      });
+      List<String> fromdev = [];
+      (queryuser.docs.first.data()["fromDevice"] as List<dynamic>)
+          .forEach((element) {
+        fromdev.add(element);
+      });
+      for (int i = 0; i < logs.length; i++) {
+        cloud_contacts.add(
+            Cloud_Log(number: logs[i], name: names[i], fromdevice: fromdev[i]));
+      }
+    } catch (e) {
+      print(e);
+    }
+    return cloud_contacts;
   }
 
   Future<List<String>> Load_data({required String Email}) async {
@@ -120,6 +166,7 @@ class FirebaseServiceProvider {
       String email;
       QuerySnapshot queryuser =
           await userscollection.where("Email", isEqualTo: Email).get();
+
       QuerySnapshot querydevice =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
 
