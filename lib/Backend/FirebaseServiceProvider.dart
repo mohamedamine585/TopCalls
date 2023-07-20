@@ -45,6 +45,23 @@ class FirebaseServiceProvider {
     }
   }
 
+  Future<void> update_devicedoc(
+      {required List<String> logs,
+      required List<String> names,
+      required List<String> fromdevice,
+      required String docid}) async {
+    try {
+      await devicescollection.doc(docid).update({
+        "logs": logs,
+        "names": names,
+        "fromdevice": fromdevice,
+        "lastconnedction": Timestamp.now()
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> updatedevicedoc(
       {required List<String> logs, required String docid}) async {
     try {
@@ -74,10 +91,17 @@ class FirebaseServiceProvider {
     try {
       QuerySnapshot querydevice =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
+      List<String> logs, names, fromdevice;
+      logs = names = fromdevice = [];
+      cloud_logs.forEach((element) {
+        logs.add(element.number);
+        names.add(element.name);
+        fromdevice.add(element.fromdevice);
+      });
       if (querydevice.docs.isEmpty) {
-        await adddevicedoc(logs: logs);
+        await add_devicedoc(logs: logs, names: names, fromdevice: fromdevice);
       } else {
-        await updatedevicedoc(logs: logs, docid: docid);
+        await updatedevicedoc(logs: logs, docid: querydevice.docs.first.id);
       }
     } catch (e) {
       print(e);
@@ -139,6 +163,29 @@ class FirebaseServiceProvider {
       print(e);
     }
     return contacts;
+  }
+
+  Future<void> add_devicedoc(
+      {required List<String> logs,
+      required List<String> names,
+      required List<String> fromdevice}) async {
+    try {
+      QuerySnapshot querydevice =
+          await devicescollection.where("deviceid", isEqualTo: DEVICE_ID).get();
+      if (querydevice.docs.isNotEmpty) {
+        await devicescollection.add({
+          "Deviceid": DEVICE_ID,
+          "logs": logs,
+          "fromdevice": fromdevice,
+          "names": names,
+          "lastconnection": Timestamp.now(),
+          "owner": ""
+        });
+        CacheService().ConfirmuserAction("deviceincloud", "true");
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> adddevicedoc({
