@@ -41,6 +41,7 @@ dependencies:
   firebase_core: ^0.7.0
   cloud_firestore: ^0.16.0+1
   shared_preferences: ^2.0.20
+  connectivity: ^3.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

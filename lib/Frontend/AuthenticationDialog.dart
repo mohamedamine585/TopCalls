@@ -78,6 +78,7 @@ class _AuthDialogState extends State<AuthDialog> {
                                 collectionReference: collectionReference,
                                 Email: email.text,
                                 password: password.text);
+
                             if (authService.cloud_user != null) {
                               Navigator.of(context).popAndPushNamed("Clouddata",
                                   arguments: authService);

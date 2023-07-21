@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:topcalls/Backend/Contact.dart';
 import 'package:call_log/call_log.dart';
+import 'package:topcalls/Backend/DeviceSystemServiceProvider.dart';
 import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
 import 'package:topcalls/OldBackend/OldFirebaseService.dart';
 
@@ -21,7 +22,7 @@ class CallsService {
             dateTime = c0.lastcall;
           }
         }
-        
+
         callsmap[element.number ?? ""] = Contact(
             element.number ?? "",
             element.name ?? "",
@@ -43,8 +44,9 @@ class CallsService {
       listcontact.forEach((element) {
         cloud_data.add(element.contact);
       });
-
-      await FirebaseServiceProvider().Store_data(data: cloud_data);
+      if (await DeviceSystemServiceProvider().check_connection()) {
+        await FirebaseServiceProvider().Store_data(data: cloud_data);
+      }
     } catch (e) {
       print(e);
     }

@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
         (ModalRoute.of(context)?.settings.arguments as AuthService?);
     AuthService authService =
         (authservice != null) ? authservice : AuthService();
-    print(authService.cloud_user);
+    print(authService);
     return FutureBuilder(
         future: FirebaseServiceProvider().connect(authService: authService),
         builder: (context, snapshot) {

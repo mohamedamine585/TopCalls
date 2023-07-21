@@ -21,11 +21,14 @@ class CloudContacts extends StatefulWidget {
 class _CloudContactsState extends State<CloudContacts> {
   @override
   Widget build(BuildContext context) {
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection("users");
     AuthService authService =
         ModalRoute.of(context)?.settings.arguments as AuthService;
-
+    try {
+      CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection("users");
+    } catch (e) {
+      print(e);
+    }
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 176, 172, 163),

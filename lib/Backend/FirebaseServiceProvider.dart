@@ -14,7 +14,7 @@ class FirebaseServiceProvider {
 
   Future<void> connect({required AuthService authService}) async {
     try {
-      Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
       devicescollection = FirebaseFirestore.instance.collection("devices");
       userscollection = FirebaseFirestore.instance.collection("users");
       await DeviceSystemServiceProvider().Initiate();
@@ -137,11 +137,12 @@ class FirebaseServiceProvider {
 
   Future<List<String>> Load_data({required String Email}) async {
     List<String> contacts = [];
+
     try {
+      userscollection = FirebaseFirestore.instance.collection("users");
       QuerySnapshot querydevicesdocs =
           await userscollection.where("Email", isEqualTo: Email).get();
       DocumentSnapshot queryDocumentSnapshot;
-
       for (String Element in (querydevicesdocs.docs.first.data()["DevicesList"]
           as List<dynamic>)) {
         queryDocumentSnapshot = await devicescollection.doc(Element).get();
