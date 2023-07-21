@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:topcalls/Backend/Contact.dart';
 import 'package:call_log/call_log.dart';
 import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
-import 'package:topcalls/OldBackend/OldFirebaseService.dart';
 
 class CallsService {
   Future<List<Contact>>? fetch_top_contact() async {
@@ -21,7 +20,7 @@ class CallsService {
             dateTime = c0.lastcall;
           }
         }
-        
+
         callsmap[element.number ?? ""] = Contact(
             element.number ?? "",
             element.name ?? "",
