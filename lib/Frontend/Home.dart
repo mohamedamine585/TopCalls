@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:topcalls/Backend/AuthService.dart';
 import 'package:topcalls/Backend/Contact.dart';
 import 'package:topcalls/Backend/CallsService.dart';
 import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
-import 'package:topcalls/OldBackend/OldFirebaseService.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

@@ -1,6 +1,3 @@
-import 'dart:collection';
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
@@ -226,6 +223,7 @@ class FirebaseServiceProvider {
           "names": querydevice.docs.first.data()["names"],
           "fromdevice": querydevice.docs.first.data()["fromdevice"],
           "Deviceid": "",
+          "Deviceid2": DEVICE_ID
         });
         await userscollection
             .doc((await userscollection.where("Email", isEqualTo: email).get())
@@ -322,6 +320,7 @@ class FirebaseServiceProvider {
       String otherowneremail = querydevices.docs.first.data()["owner"];
       if (otherowneremail != "") {
         await devicescollection.add({
+          "Deviceid2": DEVICE_ID,
           "Deviceid": "",
           "owner": otherowneremail,
           "lastconnection": querydevices.docs.first.data()["lastconnection"],
