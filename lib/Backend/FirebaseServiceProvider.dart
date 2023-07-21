@@ -223,6 +223,8 @@ class FirebaseServiceProvider {
         DocumentReference newotherdoc = await devicescollection.add({
           "owner": email,
           "logs": querydevice.docs.first.data()["logs"],
+          "names": querydevice.docs.first.data()["names"],
+          "fromdevice": querydevice.docs.first.data()["fromdevice"],
           "Deviceid": "",
         });
         await userscollection
@@ -238,7 +240,6 @@ class FirebaseServiceProvider {
                       .data()["DevicesList"] +
                   [newotherdoc.id]
         });
-
         await remove_doc_from_user(
             Email: email,
             docs: queryuser.docs,
