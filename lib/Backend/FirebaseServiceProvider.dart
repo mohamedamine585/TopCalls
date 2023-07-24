@@ -52,7 +52,7 @@ class FirebaseServiceProvider {
         "logs": logs,
         "names": names,
         "fromdevice": fromdevice,
-        "lastconnedction": Timestamp.now()
+        "lastconnection": Timestamp.now()
       });
     } catch (e) {
       print(e);
@@ -88,17 +88,26 @@ class FirebaseServiceProvider {
     try {
       QuerySnapshot querydevice =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
+      List<dynamic> current_logs = await querydevice.docs.first.data()["logs"];
       List<String> logs, names, fromdevice;
-      logs = names = fromdevice = [];
+      logs = [];
+      names = [];
+      fromdevice = [];
       cloud_logs.forEach((element) {
-        logs.add(element.number);
-        names.add(element.name);
-        fromdevice.add(element.fromdevice);
+        if (!current_logs.contains(element)) {
+          logs.add(element.number);
+          names.add(element.name);
+          fromdevice.add(DEVICE_ID ?? "");
+        }
       });
       if (querydevice.docs.isEmpty) {
         await add_devicedoc(logs: logs, names: names, fromdevice: fromdevice);
       } else {
-        await updatedevicedoc(logs: logs, docid: querydevice.docs.first.id);
+        await update_devicedoc(
+            logs: logs,
+            names: names,
+            fromdevice: fromdevice,
+            docid: querydevice.docs.first.id);
       }
     } catch (e) {
       print(e);
@@ -108,23 +117,20 @@ class FirebaseServiceProvider {
   Future<List<Cloud_Log>> load_cloud_logs({required String Email}) async {
     List<Cloud_Log> cloud_contacts = [];
     try {
+      userscollection = FirebaseFirestore.instance.collection("users");
       QuerySnapshot queryuser =
           await userscollection.where("Email", isEqualTo: Email).get();
-      QueryDocumentSnapshot queryDocumentSnapshot;
-      List<String> logs = [];
-      (queryuser.docs.first.data()["logs"] as List<dynamic>).forEach((element) {
-        logs.add(element);
-      });
-      List<String> names = [];
-      (queryuser.docs.first.data()["names"] as List<dynamic>)
-          .forEach((element) {
-        names.add(element);
-      });
-      List<String> fromdev = [];
-      (queryuser.docs.first.data()["fromDevice"] as List<dynamic>)
-          .forEach((element) {
-        fromdev.add(element);
-      });
+      List<dynamic> logs = [];
+      List<dynamic> names = [];
+      List<dynamic> fromdev = [];
+      for (dynamic Element
+          in (queryuser.docs.first.data()["DevicesList"] as List<dynamic>)) {
+        DocumentSnapshot documentSnapshot =
+            await devicescollection.doc(Element).get();
+        logs.addAll(documentSnapshot.data()["logs"] as List<dynamic>);
+        names.addAll(documentSnapshot.data()["names"] as List<dynamic>);
+        fromdev.addAll(documentSnapshot.data()["fromdevice"] as List<dynamic>);
+      }
       for (int i = 0; i < logs.length; i++) {
         cloud_contacts.add(
             Cloud_Log(number: logs[i], name: names[i], fromdevice: fromdev[i]));
@@ -170,7 +176,7 @@ class FirebaseServiceProvider {
     try {
       QuerySnapshot querydevice =
           await devicescollection.where("deviceid", isEqualTo: DEVICE_ID).get();
-      if (querydevice.docs.isNotEmpty) {
+      if (querydevice.docs.isEmpty) {
         await devicescollection.add({
           "Deviceid": DEVICE_ID,
           "logs": logs,

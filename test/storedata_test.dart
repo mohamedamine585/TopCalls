@@ -1,17 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:topcalls/Backend/AuthService.dart';
+import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
 import 'package:topcalls/Backend/firebase_options.dart';
 
-void main() {
-  setUpAll(() async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    await FirebaseServiceProvider().connect(authService: AuthService());
+void main() async {
+  setUpAll(() {
+    {
+      WidgetsFlutterBinding.ensureInitialized();
+    }
   });
-  test('testing storing data', () async {
-    List<String> logs =
-        await FirebaseServiceProvider().Load_data(Email: "loxfox");
-    print(logs);
-  });
+  await Firebase.initializeApp();
+
+  test('testing storing data', () async {});
 }

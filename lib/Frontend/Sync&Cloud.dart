@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:topcalls/Backend/AuthService.dart';
+import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
+import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 
@@ -23,18 +25,19 @@ class _CloudContactsState extends State<CloudContacts> {
   Widget build(BuildContext context) {
     AuthService authService =
         ModalRoute.of(context)?.settings.arguments as AuthService;
-    try {
-      CollectionReference collectionReference =
-          FirebaseFirestore.instance.collection("users");
-    } catch (e) {
-      print(e);
-    }
+
     return Scaffold(
         appBar: AppBar(
+          title: const Center(
+            child: const Text(
+              "Cloud Logs",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           backgroundColor: Color.fromARGB(255, 176, 172, 163),
           actions: [
             (authService.cloud_user != null)
-                ? TextButton(
+                ? IconButton(
                     onPressed: () async {
                       await authService.Logout();
                       authService.cloud_user = null;
@@ -43,7 +46,7 @@ class _CloudContactsState extends State<CloudContacts> {
                           arguments: authService,
                           (route) => false);
                     },
-                    child: const Text("Logout"))
+                    icon: const Icon(Icons.logout))
                 : SizedBox()
           ],
         ),
@@ -89,26 +92,46 @@ class _CloudContactsState extends State<CloudContacts> {
                 ],
               ))
         ]),
-        backgroundColor: Color.fromARGB(255, 176, 172, 163),
+        backgroundColor: Color.fromARGB(255, 234, 233, 233),
         body: (authService.cloud_user != null)
             ? FutureBuilder(
-                future: FirebaseServiceProvider()
-                    .Load_data(Email: authService.cloud_user?.Email ?? ""),
+                future: FirebaseServiceProvider().load_cloud_logs(
+                    Email: authService.cloud_user?.Email ?? ""),
                 builder: (BuildContext context,
-                    AsyncSnapshot<List<String>> snapshot) {
+                    AsyncSnapshot<List<Cloud_Log>> snapshot) {
                   if (snapshot.data?.isNotEmpty ?? false) {
                     int totald;
-                    List<String> data = snapshot.data ?? [];
-
+                    List<Cloud_Log> data = snapshot.data ?? [];
                     return ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
-                            height: 50,
+                            height: 70,
                             child: Card(
-                              child: Text(
-                                data.elementAt(index),
-                                style: TextStyle(fontSize: 20),
+                              color: (data.elementAt(index).fromdevice ==
+                                      DEVICE_ID)
+                                  ? Color.fromARGB(255, 99, 229, 244)
+                                  : Color.fromARGB(255, 235, 107, 226),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 150,
+                                    child: Text(
+                                      "number :" + data.elementAt(index).number,
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 200,
+                                    child: Text(
+                                        "name :" + data.elementAt(index).name),
+                                  ),
+                                  Container(
+                                    width: 250,
+                                    child: Text("from device :" +
+                                        data.elementAt(index).fromdevice),
+                                  ),
+                                ],
                               ),
                             ));
                       },

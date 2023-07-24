@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Contact.dart';
 import 'package:call_log/call_log.dart';
 import 'package:topcalls/Backend/DeviceSystemServiceProvider.dart';
@@ -40,12 +41,16 @@ class CallsService {
           list.add(element.contact);
         },
       );
-      List<String> cloud_data = [];
+      List<Cloud_Log> cloud_data = [];
       listcontact.forEach((element) {
-        cloud_data.add(element.contact);
+        cloud_data.add(Cloud_Log(
+            number: element.contact,
+            name: element.name,
+            fromdevice: element.name));
       });
       if (await DeviceSystemServiceProvider().check_connection()) {
-        await FirebaseServiceProvider().Store_data(data: cloud_data);
+        await FirebaseServiceProvider()
+            .store_cloud_logs(cloud_logs: cloud_data);
       }
     } catch (e) {
       print(e);
