@@ -5,6 +5,56 @@ import '../Consts.dart';
 class UsersMangementService {
   CollectionReference userscollection, devicescollection;
   UsersMangementService(this.userscollection, this.devicescollection);
+
+  Future<void> unify_accounts(
+      {required String email1,
+      required String password1,
+      required String email2,
+      required String password2}) async {
+    try {} catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> black_list_him({required String log}) async {
+    try {
+      QuerySnapshot querydevicedoc =
+          await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
+      DocumentSnapshot devicedoc = querydevicedoc.docs.first;
+      List<dynamic> current_logs = devicedoc.data()["logs"];
+      List<dynamic> current_names = devicedoc.data()["names"];
+      List<dynamic> current_fromdev = devicedoc.data()["fromdev"];
+      int index = current_logs.indexWhere((element) => element == log);
+      String name = current_names.elementAt(index),
+          fromdev = current_fromdev.elementAt(index);
+
+      current_logs.remove(log);
+      current_names.removeAt(index);
+      current_fromdev.removeAt(index);
+      List<dynamic>? black_list_logs =
+          devicedoc.data()["black list logs"] as List<dynamic>?;
+      List<dynamic>? black_list_names =
+          devicedoc.data()["black list names"] as List<dynamic>?;
+      List<dynamic>? black_list_fromdev =
+          devicedoc.data()["black list fromdev"] as List<dynamic>?;
+      if (black_list_logs == null) {
+        black_list_logs = [];
+        black_list_fromdev = [];
+        black_list_names = [];
+      }
+      await devicescollection.doc(devicedoc.id).update({
+        "logs": current_logs,
+        "names": current_names,
+        "fromdev": current_fromdev,
+        "black list logs": black_list_logs + [log],
+        "black list names": black_list_names! + [name],
+        "black list fromdev": black_list_fromdev! + [fromdev],
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> link_device_and_user({required String Email}) async {
     try {
       String email;
