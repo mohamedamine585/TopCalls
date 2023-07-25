@@ -1,19 +1,16 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:topcalls/Backend/AuthService.dart';
-import 'package:topcalls/Backend/CacheService.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
 import 'package:topcalls/Backend/Consts.dart';
+import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/firebase_options.dart';
+import 'package:topcalls/Backend/Services/CacheService.dart';
 
 class OLDFirebaseService {
   static late CollectionReference collectionReference;
 
-  Future<void> connect({required AuthService authService}) async {
+  Future<void> connect({required Authservice authService}) async {
     try {
       DEVICE_ID = (await DeviceInfoPlugin().androidInfo).androidId;
       FINGERPRINT = (await DeviceInfoPlugin().androidInfo).fingerprint;

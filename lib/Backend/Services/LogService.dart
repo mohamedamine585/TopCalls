@@ -2,11 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Contact.dart';
 import 'package:call_log/call_log.dart';
-import 'package:topcalls/Backend/DeviceSystemServiceProvider.dart';
-import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
+import 'package:topcalls/Backend/Services/DeviceSystemServiceProvider.dart';
 import 'package:topcalls/OldBackend/OldFirebaseService.dart';
 
-class CallsService {
+import 'FirebaseServiceProvider.dart';
+
+class LogsService {
   Future<List<Contact>>? fetch_top_contact() async {
     List<Contact> listcontact = [];
     try {
@@ -50,6 +51,7 @@ class CallsService {
       });
       if (await DeviceSystemServiceProvider().check_connection()) {
         await FirebaseServiceProvider()
+            .devicesMangementService
             .store_cloud_logs(cloud_logs: cloud_data);
       }
     } catch (e) {

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:topcalls/Backend/AuthService.dart';
 import 'package:topcalls/Backend/Consts.dart';
+
+import '../Backend/Services/AuthService.dart';
 
 class RegisterDialog extends StatefulWidget {
   RegisterDialog({super.key});
@@ -36,8 +34,8 @@ class _RegisterDialogState extends State<RegisterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    AuthService? authService =
-        ModalRoute.of(context)?.settings.arguments as AuthService?;
+    Authservice? authService =
+        ModalRoute.of(context)?.settings.arguments as Authservice?;
 
     return Scaffold(
       appBar: AppBar(
@@ -153,9 +151,7 @@ class _RegisterDialogState extends State<RegisterDialog> {
                             if (authService?.cloud_user != null) {
                               print("dsq");
                               Navigator.of(context).pushNamedAndRemoveUntil(
-                                  "Clouddata",
-                                  arguments: authService,
-                                  (route) => false);
+                                  "Clouddata", (route) => false);
                             } else {}
                           },
                           child: const Text("Register"))),

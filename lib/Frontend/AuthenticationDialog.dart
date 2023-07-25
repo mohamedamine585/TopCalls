@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:topcalls/Backend/AuthService.dart';
+
+import '../Backend/Services/AuthService.dart';
 
 class AuthDialog extends StatefulWidget {
   AuthDialog({
     super.key,
     required this.authService,
   });
-  AuthService authService;
+  Authservice authService;
   @override
   State<AuthDialog> createState() => _AuthDialogState();
 }
@@ -26,7 +25,7 @@ class _AuthDialogState extends State<AuthDialog> {
 
   @override
   Widget build(BuildContext context) {
-    AuthService authService = widget.authService;
+    Authservice authService = widget.authService;
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("users");
     return Scaffold(
@@ -80,8 +79,9 @@ class _AuthDialogState extends State<AuthDialog> {
                                 password: password.text);
 
                             if (authService.cloud_user != null) {
-                              Navigator.of(context).popAndPushNamed("Clouddata",
-                                  arguments: authService);
+                              Navigator.of(context).popAndPushNamed(
+                                "Clouddata",
+                              );
                             } else {
                               print("Login failed");
                             }

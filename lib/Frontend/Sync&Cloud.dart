@@ -1,17 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:topcalls/Backend/AuthService.dart';
+
 import 'package:topcalls/Backend/Cloud_Contact.dart';
-import 'package:topcalls/Backend/Cloud_user.dart';
 import 'package:topcalls/Backend/Consts.dart';
-import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 
-import '../Backend/Contact.dart';
-import '../OldBackend/OldFirebaseService.dart';
+import '../Backend/Services/AuthService.dart';
 
 class CloudContacts extends StatefulWidget {
   const CloudContacts({super.key});
@@ -23,8 +18,7 @@ class CloudContacts extends StatefulWidget {
 class _CloudContactsState extends State<CloudContacts> {
   @override
   Widget build(BuildContext context) {
-    AuthService authService =
-        ModalRoute.of(context)?.settings.arguments as AuthService;
+    Authservice authService = Authservice();
 
     return Scaffold(
         appBar: AppBar(
@@ -42,9 +36,7 @@ class _CloudContactsState extends State<CloudContacts> {
                       await authService.Logout();
                       authService.cloud_user = null;
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          "Clouddata",
-                          arguments: authService,
-                          (route) => false);
+                          "Clouddata", (route) => false);
                     },
                     icon: const Icon(Icons.logout))
                 : SizedBox()
@@ -95,8 +87,10 @@ class _CloudContactsState extends State<CloudContacts> {
         backgroundColor: Color.fromARGB(255, 234, 233, 233),
         body: (authService.cloud_user != null)
             ? FutureBuilder(
-                future: FirebaseServiceProvider().load_cloud_logs(
-                    Email: authService.cloud_user?.Email ?? ""),
+                future: FirebaseServiceProvider()
+                    .devicesMangementService
+                    .load_cloud_logs(
+                        Email: authService.cloud_user?.Email ?? ""),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Cloud_Log>> snapshot) {
                   if (snapshot.data?.isNotEmpty ?? false) {

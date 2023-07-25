@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:topcalls/Backend/AuthService.dart';
 import 'package:topcalls/Backend/Contact.dart';
-import 'package:topcalls/Backend/CallsService.dart';
-import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
+import 'package:topcalls/Backend/Services/LogService.dart';
+import 'package:topcalls/Backend/Services/AuthService.dart';
+
+import '../Backend/Services/FirebaseServiceProvider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,16 +15,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   bool checked = false;
-  CallsService callsService = CallsService();
+  LogsService callsService = LogsService();
 
   Widget build(BuildContext context) {
-    AuthService? authservice =
-        (ModalRoute.of(context)?.settings.arguments as AuthService?);
-    AuthService authService =
-        (authservice != null) ? authservice : AuthService();
+    Authservice authService = Authservice();
     print(authService);
     return FutureBuilder(
-        future: FirebaseServiceProvider().connect(authService: authService),
+        future: FirebaseServiceProvider().connect(),
         builder: (context, snapshot) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -75,9 +73,7 @@ class _HomeState extends State<Home> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          "Clouddata",
-                          arguments: authService,
-                          (route) => false);
+                          "Clouddata", (route) => false);
                     },
                     child: Row(
                       children: [

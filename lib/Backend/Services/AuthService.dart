@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:topcalls/Backend/CacheService.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
-import 'package:topcalls/Backend/Consts.dart';
-import 'package:topcalls/Backend/FirebaseServiceProvider.dart';
-import 'package:topcalls/OldBackend/OldFirebaseService.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
+import 'package:topcalls/Backend/Services/CacheService.dart';
 
-class AuthService {
+class Authservice {
+  static final Authservice _instance = Authservice._();
+  Authservice._();
+
+  factory Authservice() => _instance;
+
   late final CollectionReference collectionReference;
-
   Cloud_user? cloud_user;
 
   Future<void> initialize_from_Cloud_and_Cache(
@@ -59,7 +61,9 @@ class AuthService {
           .get();
       List<String> devices = [];
 
-      await FirebaseServiceProvider().link_device_and_user(Email: Email);
+      await FirebaseServiceProvider()
+          .usersMangementService
+          .link_device_and_user(Email: Email);
       (querySnapshot0.docs.single.data()["DevicesList"] as List<dynamic>)
           .forEach((element) {
         devices.add(element);
@@ -105,6 +109,7 @@ class AuthService {
   }) async {
     try {
       QuerySnapshot? querySnapshot0 = await FirebaseServiceProvider()
+          .usersMangementService
           .adduserdoc(Email: Email, password: password);
 
       CacheService().ConfirmuserAction("Email", Email);
