@@ -4,11 +4,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:topcalls/Backend/Services/DeviceSystemServiceProvider.dart';
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/Services/DevicesMangement.dart';
+import 'package:topcalls/Backend/Services/LogsMangementService.dart';
 import 'package:topcalls/Backend/Services/UsersMangementService.dart';
 import 'package:topcalls/Backend/firebase_options.dart';
 
 class FirebaseServiceProvider {
   late CollectionReference userscollection, devicescollection;
+
+  LogsMangementService get logsmangementservice =>
+      LogsMangementService(userscollection, devicescollection);
 
   DevicesMangementService get devicesMangementService =>
       DevicesMangementService(userscollection, devicescollection);

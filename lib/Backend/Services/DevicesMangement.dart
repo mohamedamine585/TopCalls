@@ -67,6 +67,29 @@ class DevicesMangementService {
     }
   }
 
+  Future<List<Cloud_Log>> load_black_list({required String email}) async {
+    List<Cloud_Log> black_logs = [];
+    try {
+      QuerySnapshot queryuser =
+          await userscollection.where("Email", isEqualTo: email).get();
+      List<dynamic> devices = queryuser.docs.first.data()["Devicesid"];
+      DocumentSnapshot documentSnapshot;
+      for (dynamic device in devices) {
+        documentSnapshot = await devicescollection.doc(device).get();
+        List<dynamic> b_logs = documentSnapshot.data()["black list logs"];
+        List<dynamic> b_names = documentSnapshot.data()["black list names"];
+        List<dynamic> b_fromdev = documentSnapshot.data()["black list fromdev"];
+        for (int i = 0; i < b_logs.length; i++) {
+          black_logs.add(Cloud_Log(
+              number: b_logs[i], name: b_names[i], fromdevice: b_fromdev[i]));
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return black_logs;
+  }
+
   Future<void> store_cloud_logs({required List<Cloud_Log> cloud_logs}) async {
     try {
       QuerySnapshot querydevice =
