@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:topcalls/Backend/Services/DevicesMangement.dart';
 
@@ -13,6 +15,7 @@ class LogsMangementService {
     try {
       QuerySnapshot querySnapshot =
           await userscollection.where("Email", isEqualTo: email).get();
+
       bool is_in = false;
       List<Cloud_Log> his_logs =
               await DevicesMangementService(userscollection, devicescollection)
@@ -21,13 +24,37 @@ class LogsMangementService {
               await DevicesMangementService(userscollection, devicescollection)
                   .load_black_list(email: email);
 
+      // look if he already has it
       for (Cloud_Log Log in his_logs) {
         if (Log.number == log.number) {
           is_in = true;
         }
       }
+      // if he hasn't already the log and if he didn't black list it
       if (is_in == false && !his_black_logs.contains(log)) {
-        // add log to ... ?
+        QuerySnapshot query_device = await devicescollection
+            .where("owner", isEqualTo: email)
+            .where("Deviceid", isEqualTo: "")
+            .get();
+
+        List<dynamic>? importedlogs =
+            query_device.docs.first.data()["imported logs index"];
+        await devicescollection.doc(query_device.docs.first.id).update({
+          "logs": query_device.docs.first.data()["logs"] + [log.number],
+          "names": query_device.docs.first.data()["names"] + [log.name],
+          "fromdev":
+              query_device.docs.first.data()["fromdev"] + [log.fromdevice],
+          "imported logs index": (importedlogs != null)
+              ? importedlogs +
+                  [
+                    (query_device.docs.first.data()["logs"] as List<dynamic>)
+                        .length
+                  ]
+              : [
+                  (query_device.docs.first.data()["logs"] as List<dynamic>)
+                      .length
+                ]
+        });
       }
     } catch (e) {
       print(e);
