@@ -1,14 +1,14 @@
 class Cloud_user {
   final String Email;
   final String password;
-  final int Contact_number;
+  final int Contacts_number;
   final bool isEmailverified;
   final List<String> DevicesList;
   late final String? phonenumber;
   Cloud_user(
       {required this.Email,
       required this.password,
-      required this.Contact_number,
+      required this.Contacts_number,
       required this.isEmailverified,
       required this.DevicesList});
 
@@ -17,7 +17,7 @@ class Cloud_user {
     return Cloud_user(
         Email: Email,
         password: password,
-        Contact_number: 0,
+        Contacts_number: 0,
         isEmailverified: false,
         DevicesList: []);
   }

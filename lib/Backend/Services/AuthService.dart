@@ -29,7 +29,7 @@ class Authservice {
             Email: Email,
             DevicesList: lists,
             password: querySnapshot.docs.single.data()["password"],
-            Contact_number: lists.length,
+            Contacts_number: lists.length,
             isEmailverified:
                 querySnapshot.docs.single.data()["isEmailverified"]);
       } else {
@@ -74,7 +74,7 @@ class Authservice {
           Email: Email,
           password: password,
           DevicesList: devices,
-          Contact_number: devices.length,
+          Contacts_number: devices.length,
           isEmailverified:
               querySnapshot0.docs.single.data()["isEmailverified"]);
       CacheService().ConfirmuserAction("Email", Email);
@@ -102,11 +102,14 @@ class Authservice {
       });
 
       if (querySnapshot0 != null) {
+        List<String> his_logs = await FirebaseServiceProvider()
+            .devicesMangementService
+            .Load_data(Email: Email);
         cloud_user = Cloud_user(
             Email: Email,
             DevicesList: devlist,
             password: password,
-            Contact_number: devlist.length,
+            Contacts_number: devlist.length,
             isEmailverified:
                 querySnapshot0.docs.single.data()["isEmailverified"]);
       } else {

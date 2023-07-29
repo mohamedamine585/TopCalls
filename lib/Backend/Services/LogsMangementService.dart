@@ -7,7 +7,6 @@ import '../Consts.dart';
 class LogsMangementService {
   CollectionReference userscollection, devicescollection;
   LogsMangementService(this.userscollection, this.devicescollection);
-
   Future<void> share_it_with(
       {required Cloud_Log log, required String email}) async {
     try {

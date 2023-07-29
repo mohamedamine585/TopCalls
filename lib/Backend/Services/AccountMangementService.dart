@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Backend/Services/LogService.dart';
 
 class AccountMangementService {
   Cloud_user? user;
   CollectionReference userscollection, devicescollection;
   AccountMangementService(this.userscollection, this.devicescollection);
-  Future<void> Change_password(
+  Future<void> change_password(
       {required String oldpassword, required String newpassword}) async {
     try {
       if (user?.password == oldpassword) {
@@ -75,21 +76,15 @@ class AccountMangementService {
     try {
       if (user?.phonenumber != null) {
         QuerySnapshot queryusers = await userscollection.get();
-        List<dynamic> devices = [];
-        List<dynamic> logs = [];
-        queryusers.docs.forEach((User) {
-          devices = User.data()["DevicesList"];
-          devices.forEach((element) async {
-            DocumentSnapshot device =
-                await devicescollection.doc(element).get();
-            logs = device.data()["logs"];
-            logs.forEach((element) {
-              if (element == user?.phonenumber &&
-                  !who_have_ur_number.contains(User.data()["Email"])) {
-                who_have_ur_number.add(User.data()["Email"]);
-              }
-            });
-          });
+
+        List<String> his_logs = [];
+        queryusers.docs.forEach((User) async {
+          his_logs = await FirebaseServiceProvider()
+              .devicesMangementService
+              .Load_data(Email: User.data()["Email"]);
+          if (his_logs.contains(user?.phonenumber)) {
+            who_have_ur_number.add(User.data()["Email"]);
+          }
         });
       } else {
         Exception("No phonesnumber");
