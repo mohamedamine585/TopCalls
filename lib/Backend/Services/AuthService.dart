@@ -84,25 +84,6 @@ class Authservice {
     }
   }
 
-  Future<void> Change_password(
-      {required collectionReference,
-      required String oldpassword,
-      required String newpassword}) async {
-    try {
-      if (cloud_user?.password == oldpassword) {
-        QuerySnapshot querySnapshot = await collectionReference
-            .where("password", isEqualTo: oldpassword)
-            .where("Email", isEqualTo: cloud_user?.Email)
-            .get();
-        await collectionReference
-            .doc(querySnapshot.docs.single.id)
-            .update({"password": newpassword});
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   Future<void> Register({
     required String Email,
     required String password,

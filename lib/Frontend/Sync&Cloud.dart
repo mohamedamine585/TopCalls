@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 
 import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Consts.dart';
+import 'package:topcalls/Backend/Services/DeviceSystemServiceProvider.dart';
+import 'package:topcalls/Backend/Services/DevicesMangement.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
+import 'package:topcalls/Frontend/ShareLogDialog.dart';
 
 import '../Backend/Services/AuthService.dart';
 
@@ -106,25 +109,46 @@ class _CloudContactsState extends State<CloudContacts> {
                                       DEVICE_ID)
                                   ? Color.fromARGB(255, 99, 229, 244)
                                   : Color.fromARGB(255, 235, 107, 226),
-                              child: Column(
+                              child: Row(
                                 children: [
-                                  Container(
-                                    width: 150,
-                                    child: Text(
-                                      "number :" + data.elementAt(index).number,
-                                      style: TextStyle(fontSize: 20),
-                                    ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 150,
+                                        child: Text(
+                                          "number :" +
+                                              data.elementAt(index).number,
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 200,
+                                        child: Text("name :" +
+                                            data.elementAt(index).name),
+                                      ),
+                                      Container(
+                                        width: 250,
+                                        child: Text("from device :" +
+                                            data.elementAt(index).fromdevice),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    width: 200,
-                                    child: Text(
-                                        "name :" + data.elementAt(index).name),
-                                  ),
-                                  Container(
-                                    width: 250,
-                                    child: Text("from device :" +
-                                        data.elementAt(index).fromdevice),
-                                  ),
+                                  IconButton(
+                                      onPressed: () async {
+                                        await DeviceSystemServiceProvider()
+                                            .make_call(
+                                                phoneNumber: data
+                                                    .elementAt(index)
+                                                    .number);
+                                      },
+                                      icon: const Icon(Icons.call)),
+                                  IconButton(
+                                      onPressed: () {
+                                        share_dialog(
+                                            log: data.elementAt(index),
+                                            context: context);
+                                      },
+                                      icon: const Icon(Icons.share))
                                 ],
                               ),
                             ));

@@ -5,8 +5,6 @@ import 'package:topcalls/Frontend/Home.dart';
 import 'package:topcalls/Frontend/RegisterDialog.dart';
 import 'package:topcalls/Frontend/Sync&Cloud.dart';
 
-import 'Backend/firebase_options.dart';
-
 void main() async {
   runApp(MaterialApp(
     routes: {

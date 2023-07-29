@@ -1,8 +1,23 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:device_info/device_info.dart';
 import 'package:topcalls/Backend/Consts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DeviceSystemServiceProvider {
+  Future<void> make_call({required String phoneNumber}) async {
+    try {
+      final url = 'tel:$phoneNumber';
+
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<bool> check_connection() async {
     try {
       final connectivityResult = await Connectivity().checkConnectivity();

@@ -4,6 +4,7 @@ class Cloud_user {
   final int Contact_number;
   final bool isEmailverified;
   final List<String> DevicesList;
+  late final String? phonenumber;
   Cloud_user(
       {required this.Email,
       required this.password,
