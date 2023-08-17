@@ -3,6 +3,7 @@ import 'package:topcalls/Backend/Cloud_user.dart';
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/Services/CacheService.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
+import 'package:topcalls/Frontend/AccountPage.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 import 'package:topcalls/Frontend/CloudLogs.dart';
 import 'package:topcalls/Frontend/RegisterDialog.dart';
@@ -20,7 +21,7 @@ class _HomepageState extends State<Homepage> {
     return FutureBuilder(
       future: FirebaseServiceProvider().connect(),
       builder: (context, snapshot) {
-        return const CloudLogsPage();
+        return const AccountPage();
       },
     );
   }

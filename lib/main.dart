@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:topcalls/Backend/Cloud_user.dart';
+import 'package:topcalls/Frontend/AccountPage.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 import 'package:topcalls/Frontend/CloudLogs.dart';
 import 'package:topcalls/Frontend/Homepage.dart';
@@ -9,6 +10,7 @@ import 'package:topcalls/Frontend/Sync&Cloud.dart';
 void main() async {
   runApp(MaterialApp(
     routes: {
+      "AccountPage": (context) => const AccountPage(),
       "CloudLogsPage": (context) => const CloudLogsPage(), // to hold the place
       "Signin": (context) => const SigninPage(),
       "Homepage": (context) => const Homepage(),

@@ -51,13 +51,13 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
               ),
               onPressed: () {
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil("Homepage", (route) => false);
+                    .pushNamedAndRemoveUntil("CloudLogsPage", (route) => false);
               },
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(Icons.home),
                   SizedBox(
-                    width: 100,
+                    width: 75,
                   ),
                   Text(
                     "Home",
@@ -81,6 +81,26 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                   ),
                   Text(
                     "Cloud data",
+                    style: TextStyle(color: Colors.black),
+                  )
+                ],
+              )),
+          TextButton(
+              style: ButtonStyle(
+                iconColor: MaterialStateProperty.all(Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil("AccountPage", (route) => false);
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.person),
+                  SizedBox(
+                    width: 75,
+                  ),
+                  Text(
+                    "Account",
                     style: TextStyle(color: Colors.black),
                   )
                 ],
@@ -168,6 +188,16 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                           );
                         }
                         if (snapshot.connectionState == ConnectionState.none) {
+                          if (!snapshot.hasData) {
+                            return const Column(
+                              children: [
+                                Text(
+                                  "No data",
+                                  style: TextStyle(fontSize: 40),
+                                ),
+                              ],
+                            );
+                          }
                           return ListView.builder(
                             itemBuilder: (context, index) {
                               return Container(
