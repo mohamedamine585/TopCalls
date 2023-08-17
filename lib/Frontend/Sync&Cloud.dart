@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/Services/DeviceSystemServiceProvider.dart';
-import 'package:topcalls/Backend/Services/DevicesMangement.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 import 'package:topcalls/Frontend/ShareLogDialog.dart';
