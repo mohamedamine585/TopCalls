@@ -1,16 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:topcalls/Frontend/Home.dart';
+import 'package:topcalls/Backend/Cloud_user.dart';
+import 'package:topcalls/Frontend/AuthenticationDialog.dart';
+import 'package:topcalls/Frontend/CloudLogs.dart';
+import 'package:topcalls/Frontend/Homepage.dart';
 import 'package:topcalls/Frontend/RegisterDialog.dart';
 import 'package:topcalls/Frontend/Sync&Cloud.dart';
 
 void main() async {
   runApp(MaterialApp(
     routes: {
-      "Homepage": (context) => const Home(),
+      "CloudLogsPage": (context) => const CloudLogsPage(), // to hold the place
+      "Signin": (context) => const SigninPage(),
+      "Homepage": (context) => const Homepage(),
       "Clouddata": (context) => const CloudContacts(),
-      "Register": (context) => RegisterDialog(),
+      "Register": (context) => const RegisterPage(),
     },
     debugShowCheckedModeBanner: false,
     title: 'TopCalls',

@@ -34,7 +34,7 @@ void share_dialog({required Cloud_Log log, required BuildContext context}) {
                     if (email.text != "") {
                       await FirebaseServiceProvider()
                           .logsmangementservice
-                          .share_it_with(log: log, email: email.text);
+                          .add_share_log(log: log, email: email.text);
                       Navigator.of(context).pop();
                     }
                   },

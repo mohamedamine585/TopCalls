@@ -4,13 +4,13 @@ import 'package:topcalls/Backend/Consts.dart';
 
 import '../Backend/Services/AuthService.dart';
 
-class RegisterDialog extends StatefulWidget {
-  RegisterDialog({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
   @override
-  State<RegisterDialog> createState() => _RegisterDialogState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterDialogState extends State<RegisterDialog> {
+class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController email;
   late TextEditingController password;
   late TextEditingController cnfpassword;
@@ -38,133 +38,176 @@ class _RegisterDialogState extends State<RegisterDialog> {
         ModalRoute.of(context)?.settings.arguments as Authservice?;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 176, 172, 163),
-      ),
-      drawer: NavigationDrawer(children: [
-        TextButton(
-            style: ButtonStyle(
-              iconColor: MaterialStateProperty.all(Colors.black),
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "Homepage", arguments: authService, (route) => false);
-            },
-            child: Row(
-              children: [
-                Icon(Icons.home),
-                SizedBox(
-                  width: 100,
-                ),
-                Text(
-                  "Home",
-                  style: TextStyle(color: Colors.black),
-                )
-              ],
-            )),
-        TextButton(
-            style: ButtonStyle(
-              iconColor: MaterialStateProperty.all(Colors.black),
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "Clouddata", arguments: authService, (route) => false);
-            },
-            child: Row(
-              children: [
-                Icon(Icons.cloud),
-                SizedBox(
-                  width: 75,
-                ),
-                Text(
-                  "Cloud data",
-                  style: TextStyle(color: Colors.black),
-                )
-              ],
-            ))
-      ]),
-      body: Center(
-        child: Dialog(
-          child: Scaffold(
-            body: SingleChildScrollView(
-              child: Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 150,
+              ),
+              const Text(
+                "Sign up",
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Row(
                 children: [
                   SizedBox(
-                    height: 50,
+                    width: 33,
                   ),
-                  Container(
-                    width: 300,
-                    child: TextField(
-                      controller: email,
-                      decoration: InputDecoration(
-                        hintText: 'Email',
+                  Column(
+                    children: [
+                      Text(
+                        "Email",
+                        style: TextStyle(fontSize: 18),
                       ),
-                      style: TextStyle(
-                        height: 2,
-                      ),
-                    ),
+                      SizedBox(
+                        height: 5,
+                      )
+                    ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: 300,
-                    child: TextField(
-                      controller: password,
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                      ),
-                      obscureText: true,
-                      style: TextStyle(
-                        height: 2,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: 300,
-                    child: TextField(
-                      controller: cnfpassword,
-                      decoration: InputDecoration(
-                        hintText: 'Confirm password',
-                      ),
-                      obscureText: true,
-                      style: TextStyle(
-                        height: 2,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                      width: 300,
-                      child: TextButton(
-                          onPressed: () async {
-                            String deviceid = DEVICE_ID ?? "";
-                            if (password.text == cnfpassword.text) {
-                              await authService?.Register(
-                                  Email: email.text, password: password.text);
-                            }
-                            if (authService?.cloud_user != null) {
-                              print("dsq");
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  "Clouddata", (route) => false);
-                            } else {}
-                          },
-                          child: const Text("Register"))),
-                  SizedBox(
-                    height: 70,
-                  ),
-                  Container(
-                      width: 270,
-                      child: Text(
-                          "Sync your data in the cloud and never worry about losing your phone numbers again. Securely store and effortlessly retrieve your contacts whenever you need them.")),
                 ],
               ),
-            ),
+              Container(
+                width: 350,
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: TextField(
+                  controller: email,
+                  style: TextStyle(
+                    height: 2,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Row(
+                children: [
+                  const SizedBox(
+                    width: 33,
+                  ),
+                  Column(
+                    children: [
+                      const Text(
+                        "Password",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                width: 350,
+                child: TextField(
+                  controller: password,
+                  obscureText: true,
+                  style: TextStyle(
+                    height: 2,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              const Row(
+                children: [
+                  const SizedBox(
+                    width: 33,
+                  ),
+                  const Text(
+                    "Confirm Password",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                width: 350,
+                child: TextField(
+                  controller: cnfpassword,
+                  obscureText: true,
+                  style: TextStyle(
+                    height: 2,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                  width: 300,
+                  height: 50,
+                  child: TextButton(
+                      style: ButtonStyle(
+                          tapTargetSize: MaterialTapTargetSize.padded,
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)))),
+                          backgroundColor: MaterialStateProperty.all(
+                              Color.fromARGB(218, 94, 227, 250))),
+                      onPressed: () async {
+                        String deviceid = DEVICE_ID ?? "";
+                        if (password.text == cnfpassword.text) {
+                          await authService?.Register(
+                              Email: email.text, password: password.text);
+                        }
+                        if (authService?.cloud_user != null) {
+                          print("dsq");
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              "Clouddata", (route) => false);
+                        } else {}
+                      },
+                      child: const Text(
+                        "Get Saved",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ))),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                  width: 300,
+                  height: 50,
+                  child: TextButton(
+                      style: ButtonStyle(
+                          tapTargetSize: MaterialTapTargetSize.padded,
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)))),
+                          backgroundColor: MaterialStateProperty.all(
+                              Color.fromARGB(218, 182, 228, 240))),
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            "Signin", (route) => false);
+                      },
+                      child: const Text(
+                        "I'm already in",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ))),
+              SizedBox(
+                height: 70,
+              ),
+              Container(
+                  width: 270,
+                  child: Text(
+                      "Sync your data in the cloud and never worry about losing your logs again. Securely store and effortlessly retrieve your logs whenever you need them.")),
+            ],
           ),
         ),
       ),

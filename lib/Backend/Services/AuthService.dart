@@ -21,17 +21,18 @@ class Authservice {
         QuerySnapshot querySnapshot =
             await collectionReference.where("Email", isEqualTo: Email).get();
         List<String> lists = [];
-        (querySnapshot.docs.single.data()["DevicesList"] as List<dynamic>)
+        ((querySnapshot.docs.single.data() as dynamic)["DevicesList"]
+                as List<dynamic>)
             .forEach((element) {
           lists.add(element);
         });
         cloud_user = Cloud_user(
             Email: Email,
             DevicesList: lists,
-            password: querySnapshot.docs.single.data()["password"],
+            password: (querySnapshot.docs.single.data() as dynamic)["password"],
             Contacts_number: lists.length,
-            isEmailverified:
-                querySnapshot.docs.single.data()["isEmailverified"]);
+            isEmailverified: (querySnapshot.docs.single.data()
+                as dynamic)["isEmailverified"]);
       } else {
         cloud_user = null;
       }
@@ -64,7 +65,8 @@ class Authservice {
       await FirebaseServiceProvider()
           .usersMangementService
           .link_device_and_user(Email: Email);
-      (querySnapshot0.docs.single.data()["DevicesList"] as List<dynamic>)
+      ((querySnapshot0.docs.single.data() as dynamic)["DevicesList"]
+              as List<dynamic>)
           .forEach((element) {
         devices.add(element);
       });
@@ -75,8 +77,8 @@ class Authservice {
           password: password,
           DevicesList: devices,
           Contacts_number: devices.length,
-          isEmailverified:
-              querySnapshot0.docs.single.data()["isEmailverified"]);
+          isEmailverified: (querySnapshot0.docs.single.data()
+              as dynamic)["isEmailverified"]);
       CacheService().ConfirmuserAction("Email", Email);
     } catch (e) {
       print(e);
@@ -96,7 +98,8 @@ class Authservice {
       CacheService().ConfirmuserAction("Email", Email);
 
       List<String> devlist = [];
-      (querySnapshot0?.docs.single.data()["DevicesList"] as List<dynamic>)
+      ((querySnapshot0?.docs.single.data() as dynamic)["DevicesList"]
+              as List<dynamic>)
           .forEach((element) {
         devlist.add(element);
       });
@@ -110,8 +113,8 @@ class Authservice {
             DevicesList: devlist,
             password: password,
             Contacts_number: devlist.length,
-            isEmailverified:
-                querySnapshot0.docs.single.data()["isEmailverified"]);
+            isEmailverified: (querySnapshot0.docs.single.data()
+                as dynamic)["isEmailverified"]);
       } else {
         cloud_user = null;
       }

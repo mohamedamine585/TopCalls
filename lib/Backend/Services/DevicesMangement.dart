@@ -60,8 +60,8 @@ class DevicesMangementService {
           (await userscollection.where("Email", isEqualTo: Email).get())
               .docs
               .single;
-      List<String> alldocs =
-          queryDocumentSnapshot.data()["DevicesList"] as List<String>;
+      List<String> alldocs = (queryDocumentSnapshot.data()
+          as dynamic)["DevicesList"] as List<String>;
     } catch (e) {
       print(e);
     }
@@ -72,13 +72,17 @@ class DevicesMangementService {
     try {
       QuerySnapshot queryuser =
           await userscollection.where("Email", isEqualTo: email).get();
-      List<dynamic> devices = queryuser.docs.first.data()["Devicesid"];
+      List<dynamic> devices =
+          (queryuser.docs.first.data() as dynamic)["Devicesid"];
       DocumentSnapshot documentSnapshot;
       for (dynamic device in devices) {
         documentSnapshot = await devicescollection.doc(device).get();
-        List<dynamic> b_logs = documentSnapshot.data()["black list logs"];
-        List<dynamic> b_names = documentSnapshot.data()["black list names"];
-        List<dynamic> b_fromdev = documentSnapshot.data()["black list fromdev"];
+        List<dynamic> b_logs =
+            (documentSnapshot.data() as dynamic)["black list logs"];
+        List<dynamic> b_names =
+            (documentSnapshot.data() as dynamic)["black list names"];
+        List<dynamic> b_fromdev =
+            (documentSnapshot.data() as dynamic)["black list fromdev"];
         for (int i = 0; i < b_logs.length; i++) {
           black_logs.add(Cloud_Log(
               number: b_logs[i], name: b_names[i], fromdevice: b_fromdev[i]));
@@ -94,7 +98,8 @@ class DevicesMangementService {
     try {
       QuerySnapshot querydevice =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
-      List<dynamic> current_logs = await querydevice.docs.first.data()["logs"];
+      List<dynamic> current_logs =
+          await (querydevice.docs.first.data() as dynamic)["logs"];
       List<String> logs, names, fromdevice;
       logs = [];
       names = [];
@@ -129,13 +134,16 @@ class DevicesMangementService {
       List<dynamic> logs = [];
       List<dynamic> names = [];
       List<dynamic> fromdev = [];
-      for (dynamic Element
-          in (queryuser.docs.first.data()["DevicesList"] as List<dynamic>)) {
+      for (dynamic Element in ((queryuser.docs.first.data()
+          as dynamic)["DevicesList"] as List<dynamic>)) {
         DocumentSnapshot documentSnapshot =
             await devicescollection.doc(Element).get();
-        logs.addAll(documentSnapshot.data()["logs"] as List<dynamic>);
-        names.addAll(documentSnapshot.data()["names"] as List<dynamic>);
-        fromdev.addAll(documentSnapshot.data()["fromdevice"] as List<dynamic>);
+        logs.addAll(
+            (documentSnapshot.data() as dynamic)["logs"] as List<dynamic>);
+        names.addAll(
+            (documentSnapshot.data() as dynamic)["names"] as List<dynamic>);
+        fromdev.addAll((documentSnapshot.data() as dynamic)["fromdevice"]
+            as List<dynamic>);
       }
       for (int i = 0; i < logs.length; i++) {
         cloud_contacts.add(
@@ -155,11 +163,11 @@ class DevicesMangementService {
       QuerySnapshot querydevicesdocs =
           await userscollection.where("Email", isEqualTo: Email).get();
       DocumentSnapshot queryDocumentSnapshot;
-      for (String Element in (querydevicesdocs.docs.first.data()["DevicesList"]
-          as List<dynamic>)) {
+      for (String Element in ((querydevicesdocs.docs.first.data()
+          as dynamic)["DevicesList"] as List<dynamic>)) {
         queryDocumentSnapshot = await devicescollection.doc(Element).get();
-        List<dynamic>? devlist =
-            (queryDocumentSnapshot.data()["logs"] as List<dynamic>?);
+        List<dynamic>? devlist = ((queryDocumentSnapshot.data()
+            as dynamic)["logs"] as List<dynamic>?);
 
         if (devlist != null) {
           devlist.forEach((element) {

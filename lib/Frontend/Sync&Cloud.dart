@@ -168,8 +168,6 @@ class _CloudContactsState extends State<CloudContacts> {
                   }
                 },
               )
-            : AuthDialog(
-                authService: authService,
-              ));
+            : const SigninPage());
   }
 }

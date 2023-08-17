@@ -26,14 +26,15 @@ class UsersMangementService {
       QuerySnapshot querydevice =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
 
-      if (querydevice.docs.first.data()["owner"] != Email &&
-          querydevice.docs.first.data()["owner"] != "") {
-        email = querydevice.docs.first.data()["owner"];
+      if ((querydevice.docs.first.data() as dynamic)["owner"] != Email &&
+          (querydevice.docs.first.data() as dynamic)["owner"] != "") {
+        email = (querydevice.docs.first.data() as dynamic)["owner"];
         DocumentReference newotherdoc = await devicescollection.add({
           "owner": email,
-          "logs": querydevice.docs.first.data()["logs"],
-          "names": querydevice.docs.first.data()["names"],
-          "fromdevice": querydevice.docs.first.data()["fromdevice"],
+          "logs": (querydevice.docs.first.data() as dynamic)["logs"],
+          "names": (querydevice.docs.first.data() as dynamic)["names"],
+          "fromdevice":
+              (querydevice.docs.first.data() as dynamic)["fromdevice"],
           "Deviceid": "",
           "Deviceid2": DEVICE_ID
         });
@@ -44,10 +45,10 @@ class UsersMangementService {
                 .id)
             .update({
           "DevicesList":
-              (await userscollection.where("Email", isEqualTo: email).get())
+              ((await userscollection.where("Email", isEqualTo: email).get())
                       .docs
                       .single
-                      .data()["DevicesList"] +
+                      .data() as dynamic)["DevicesList"] +
                   [newotherdoc.id]
         });
         await remove_doc_from_user(
@@ -57,7 +58,8 @@ class UsersMangementService {
             userscollection: userscollection);
       }
       List<String> DevicesList = [];
-      (await queryuser.docs.first.data()["DevicesList"] as List<dynamic>)
+      (await (queryuser.docs.first.data() as dynamic)["DevicesList"]
+              as List<dynamic>)
           .forEach((element) {
         DevicesList.add(element);
       });
@@ -69,7 +71,8 @@ class UsersMangementService {
       }
       print(what_to_add);
       await userscollection.doc(queryuser.docs.first.id).update({
-        "DevicesList": queryuser.docs.first.data()["DevicesList"] + what_to_add
+        "DevicesList": (queryuser.docs.first.data() as dynamic)["DevicesList"] +
+            what_to_add
       });
       await devicescollection
           .doc(querydevice.docs.first.id)
@@ -90,7 +93,7 @@ class UsersMangementService {
               .docs
               .single;
 
-      List<dynamic> old_devices = old_owner.data()["DevicesList"];
+      List<dynamic> old_devices = (old_owner.data() as dynamic)["DevicesList"];
 
       old_devices.removeWhere((element) => element == deviceid);
       print(deviceid);
@@ -129,14 +132,16 @@ class UsersMangementService {
         }
       }
 
-      String otherowneremail = querydevices.docs.first.data()["owner"];
+      String otherowneremail =
+          (querydevices.docs.first.data() as dynamic)["owner"];
       if (otherowneremail != "") {
         await devicescollection.add({
           "Deviceid2": DEVICE_ID,
           "Deviceid": "",
           "owner": otherowneremail,
-          "lastconnection": querydevices.docs.first.data()["lastconnection"],
-          "logs": querydevices.docs.single.data()["logs"],
+          "lastconnection":
+              (querydevices.docs.first.data() as dynamic)["lastconnection"],
+          "logs": (querydevices.docs.single.data() as dynamic)["logs"],
         });
         await devicescollection.doc(querydevices.docs.first.id).update({
           "Deviceid": DEVICE_ID,

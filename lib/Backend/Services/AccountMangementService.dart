@@ -55,7 +55,8 @@ class AccountMangementService {
               .docs
               .first;
           if (userdoc.exists) {
-            List<dynamic>? phonenumbers = userdoc.data()["phonenumbers"];
+            List<dynamic>? phonenumbers =
+                (userdoc.data() as dynamic)["phonenumbers"];
             await userscollection.doc(userdoc.id).update({
               "phonenumbers":
                   (phonenumbers != null) ? phonenumbers + [number] : [number]
@@ -81,9 +82,9 @@ class AccountMangementService {
         queryusers.docs.forEach((User) async {
           his_logs = await FirebaseServiceProvider()
               .devicesMangementService
-              .Load_data(Email: User.data()["Email"]);
+              .Load_data(Email: (User.data() as dynamic)["Email"]);
           if (his_logs.contains(user?.phonenumber)) {
-            who_have_ur_number.add(User.data()["Email"]);
+            who_have_ur_number.add((User.data() as dynamic)["Email"]);
           }
         });
       } else {

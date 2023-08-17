@@ -41,7 +41,7 @@ class OLDFirebaseService {
       QuerySnapshot querySnapshot =
           await collectionReference.where("Email", isEqualTo: Email).get();
       (querySnapshot.docs.forEach((element) {
-        (element.data()["data"] as List<dynamic>).forEach((e) {
+        ((element.data() as dynamic)["data"] as List<dynamic>).forEach((e) {
           contacts.add(e);
         });
       }));
@@ -80,7 +80,7 @@ class OLDFirebaseService {
         });
 
         List<String> old_data = [];
-        List<dynamic> old_data_d = documentSnapshot.data()["data"];
+        List<dynamic> old_data_d = (documentSnapshot.data() as dynamic)["data"];
         old_data_d.forEach((element) {
           old_data.add(element);
         });
@@ -101,12 +101,14 @@ class OLDFirebaseService {
       required String Email,
       required String password}) async {
     try {
-      if (querySnapshot0.docs.single.data()["Email"] != "") {
+      if ((querySnapshot0.docs.single.data() as dynamic)["Email"] != "") {
         await collectionReference.add({
-          "Email": querySnapshot0.docs.single.data()["Eamil"],
-          "data": querySnapshot0.docs.single.data()["data"],
-          "lastconnection": querySnapshot0.docs.single.data()["lastconnection"],
-          "fingerprint": querySnapshot0.docs.single.data()["fingerprint"]
+          "Email": (querySnapshot0.docs.single.data() as dynamic)["Eamil"],
+          "data": (querySnapshot0.docs.single.data() as dynamic)["data"],
+          "lastconnection":
+              (querySnapshot0.docs.single.data() as dynamic)["lastconnection"],
+          "fingerprint":
+              (querySnapshot0.docs.single.data() as dynamic)["fingerprint"]
         });
       }
       await collectionReference.doc(querySnapshot0.docs.single.id).update({
@@ -117,11 +119,13 @@ class OLDFirebaseService {
       });
       CacheService().ConfirmuserAction("Email", Email);
       return Cloud_user(
-          DevicesList: querySnapshot0.docs.single.data()["DevicesList"],
+          DevicesList:
+              (querySnapshot0.docs.single.data() as dynamic)["DevicesList"],
           Email: Email,
           password: password,
           Contacts_number:
-              (querySnapshot0.docs.single.data()["DevicesList"]).length,
+              ((querySnapshot0.docs.single.data() as dynamic)["DevicesList"])
+                  .length,
           isEmailverified: false);
     } catch (e) {
       print(e);
@@ -136,23 +140,25 @@ class OLDFirebaseService {
       List<String> device_ids = [];
       List<Timestamp> timestamps = [];
       querySnapshot.docs.forEach((element) async {
-        if (element.data()["Eamil"] == Email &&
-            element.data()["deviceid"] != DEVICE_ID) {
-          List<String> data = element.data()["data"] as List<String>;
+        if ((element.data() as dynamic)["Eamil"] == Email &&
+            (element.data() as dynamic)["deviceid"] != DEVICE_ID) {
+          List<String> data =
+              (element.data() as dynamic)["data"] as List<String>;
           logs.addAll(data);
-          fingerprints.add(element.data()["fingerprint"]);
-          device_ids.add(element.data()["deviceid"]);
+          fingerprints.add((element.data() as dynamic)["fingerprint"]);
+          device_ids.add((element.data() as dynamic)["deviceid"]);
 
-          timestamps.add(element.data()["lastconnection"]);
+          timestamps.add((element.data() as dynamic)["lastconnection"]);
           await collectionReference.doc(element.id).delete();
-        } else if (element.data()["Eamil"] == Email &&
-            element.data()["deviceid"] == DEVICE_ID) {
-          logs.addAll(element.data()["data"]);
+        } else if ((element.data() as dynamic)["Eamil"] == Email &&
+            (element.data() as dynamic)["deviceid"] == DEVICE_ID) {
+          logs.addAll((element.data() as dynamic)["data"]);
         }
       });
       await collectionReference
           .doc(querySnapshot.docs
-              .firstWhere((element) => element.data()["Email"] == Email)
+              .firstWhere(
+                  (element) => (element.data() as dynamic)["Email"] == Email)
               .id)
           .update({
         "pre_devices_ids": device_ids,
@@ -172,7 +178,8 @@ class OLDFirebaseService {
           .get();
       DocumentSnapshot documentSnapshot = querySnapshot.docs.single;
 
-      Timestamp lastconnection = documentSnapshot.data()["lastconnection"];
+      Timestamp lastconnection =
+          (documentSnapshot.data() as dynamic)["lastconnection"];
       DateTime lastconnectiondate = lastconnection.toDate();
       if (lastconnectiondate
           .add(const Duration(days: 3))
