@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:topcalls/Backend/Consts.dart';
 
 import '../Backend/Services/AuthService.dart';
+import 'Consts.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -34,16 +35,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    Authservice? authService =
-        ModalRoute.of(context)?.settings.arguments as Authservice?;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
               SizedBox(
-                height: 150,
+                height: screenlength / 6,
               ),
               const Text(
                 "Sign up",
@@ -55,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Row(
                 children: [
                   SizedBox(
-                    width: 33,
+                    width: screenwidth / 13,
                   ),
                   Column(
                     children: [
@@ -71,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
               Container(
-                width: 350,
+                width: screenwidth * 0.86,
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -85,18 +83,18 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(
                 height: 10,
               ),
-              const Row(
+              Row(
                 children: [
-                  const SizedBox(
-                    width: 33,
+                  SizedBox(
+                    width: screenwidth / 13,
                   ),
-                  Column(
+                  const Column(
                     children: [
-                      const Text(
+                      Text(
                         "Password",
                         style: TextStyle(fontSize: 18),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 5,
                       )
                     ],
@@ -106,23 +104,23 @@ class _RegisterPageState extends State<RegisterPage> {
               Container(
                 decoration: BoxDecoration(
                     border: Border.all(),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                width: 350,
+                    borderRadius: const BorderRadius.all(Radius.circular(10))),
+                width: screenwidth * 0.86,
                 child: TextField(
                   controller: password,
                   obscureText: true,
-                  style: TextStyle(
+                  style: const TextStyle(
                     height: 2,
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              const Row(
+              Row(
                 children: [
-                  const SizedBox(
-                    width: 33,
+                  SizedBox(
+                    width: screenwidth / 13,
                   ),
                   const Text(
                     "Confirm Password",
@@ -137,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
-                width: 350,
+                width: screenwidth * 0.86,
                 child: TextField(
                   controller: cnfpassword,
                   obscureText: true,
@@ -150,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 20,
               ),
               Container(
-                  width: 300,
+                  width: screenwidth * 0.7,
                   height: 50,
                   child: TextButton(
                       style: ButtonStyle(
@@ -163,14 +161,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               Color.fromARGB(218, 94, 227, 250))),
                       onPressed: () async {
                         String deviceid = DEVICE_ID ?? "";
+                        final authservice = Authservice();
                         if (password.text == cnfpassword.text) {
-                          await authService?.Register(
+                          await authservice.Register(
                               Email: email.text, password: password.text);
                         }
-                        if (authService?.cloud_user != null) {
-                          print("dsq");
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              "Clouddata", (route) => false);
+                        if (authservice.cloud_user != null) {
+                          print(authservice.cloud_user?.Email);
                         } else {}
                       },
                       child: const Text(
@@ -181,7 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 10,
               ),
               Container(
-                  width: 300,
+                  width: screenwidth * 0.7,
                   height: 50,
                   child: TextButton(
                       style: ButtonStyle(
@@ -204,9 +201,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 70,
               ),
               Container(
-                  width: 270,
+                  width: screenwidth * 0.7,
+                  height: screenlength * 0.1,
                   child: Text(
-                      "Sync your data in the cloud and never worry about losing your logs again. Securely store and effortlessly retrieve your logs whenever you need them.")),
+                      "Sync your logs in the cloud and never worry about losing them again. Securely store and effortlessly retrieve your logs whenever you need them.")),
             ],
           ),
         ),

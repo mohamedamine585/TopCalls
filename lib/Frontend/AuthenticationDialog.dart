@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:topcalls/Backend/Services/AuthService.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
+
+import 'Consts.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({
@@ -26,19 +30,19 @@ class _SigninPageState extends State<SigninPage> {
           child: Column(
             children: [
               SizedBox(
-                height: 150,
+                height: screenlength / 6,
               ),
               const Text(
                 "Sign in",
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
               SizedBox(
-                height: 50,
+                height: screenlength / 13,
               ),
               Row(
                 children: [
                   SizedBox(
-                    width: 33,
+                    width: screenwidth / 13,
                   ),
                   Column(
                     children: [
@@ -54,7 +58,7 @@ class _SigninPageState extends State<SigninPage> {
                 ],
               ),
               Container(
-                width: 350,
+                width: screenwidth * 0.86,
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -66,19 +70,19 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                height: screenlength / 70,
               ),
-              const Row(
+              Row(
                 children: [
-                  const SizedBox(
-                    width: 33,
+                  SizedBox(
+                    width: screenwidth / 13,
                   ),
-                  Column(
+                  const Column(
                     children: [
-                      const Text(
+                      Text(
                         "Password",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
@@ -93,7 +97,7 @@ class _SigninPageState extends State<SigninPage> {
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
-                width: 350,
+                width: screenwidth * 0.86,
                 child: TextField(
                   controller: password,
                   obscureText: true,
@@ -101,10 +105,10 @@ class _SigninPageState extends State<SigninPage> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: screenlength / 20,
               ),
               Container(
-                  width: 300,
+                  width: screenwidth * 0.70,
                   height: 50,
                   child: TextButton(
                       style: ButtonStyle(
@@ -115,7 +119,21 @@ class _SigninPageState extends State<SigninPage> {
                                       BorderRadius.all(Radius.circular(20)))),
                           backgroundColor: MaterialStateProperty.all(
                               Color.fromARGB(218, 94, 227, 250))),
-                      onPressed: () async {},
+                      onPressed: () async {
+                        await Authservice().Login(
+                            collectionReference:
+                                FirebaseServiceProvider().userscollection,
+                            Email: email.text,
+                            password: password.text);
+                        final user = Authservice().cloud_user;
+
+                        if (user != null) {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              "CloudLogsPage", (route) => false);
+                        } else {
+                          print(user);
+                        }
+                      },
                       child: const Text(
                         "Sign in",
                         style: TextStyle(fontSize: 18, color: Colors.black),
@@ -124,7 +142,7 @@ class _SigninPageState extends State<SigninPage> {
                 height: 10,
               ),
               Container(
-                  width: 300,
+                  width: screenwidth * 0.7,
                   height: 50,
                   child: TextButton(
                       style: ButtonStyle(
@@ -147,9 +165,10 @@ class _SigninPageState extends State<SigninPage> {
                 height: 70,
               ),
               Container(
-                  width: 270,
+                  height: screenlength * 0.1,
+                  width: screenwidth * 0.7,
                   child: Text(
-                      "Sync your data in the cloud and never worry about losing your logs again. Securely store and effortlessly retrieve your logs whenever you need them.")),
+                      "Sync your logs in the cloud and never worry about losing them again. Securely store and effortlessly retrieve your logs whenever you need them.")),
             ],
           ),
         ),

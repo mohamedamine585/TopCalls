@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:slidable_button/slidable_button.dart';
+import 'package:topcalls/Frontend/Consts.dart';
+
+import 'NavigationDrawer.dart';
 
 class Configuration extends StatefulWidget {
   const Configuration({super.key});
@@ -8,6 +12,7 @@ class Configuration extends StatefulWidget {
 }
 
 class _ConfigurationState extends State<Configuration> {
+  bool instart = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,83 +34,183 @@ class _ConfigurationState extends State<Configuration> {
               ),
             ],
           )),
-      drawer: NavigationDrawer(indicatorColor: Colors.black, children: [
-        TextButton(
-            style: ButtonStyle(
-              iconColor: MaterialStateProperty.all(Colors.black),
-            ),
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("CloudLogsPage", (route) => false);
-            },
-            child: const Row(
-              children: [
-                Icon(Icons.home),
-                SizedBox(
-                  width: 75,
-                ),
-                Text(
-                  "Home",
-                  style: TextStyle(color: Colors.black),
-                )
-              ],
-            )),
-        TextButton(
-            style: ButtonStyle(
-              iconColor: MaterialStateProperty.all(Colors.black),
-            ),
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("Clouddata", (route) => false);
-            },
-            child: Row(
-              children: [
-                Icon(Icons.cloud),
-                SizedBox(
-                  width: 75,
-                ),
-                Text(
-                  "Cloud data",
-                  style: TextStyle(color: Colors.black),
-                )
-              ],
-            )),
-        TextButton(
-            style: ButtonStyle(
-              iconColor: MaterialStateProperty.all(Colors.black),
-            ),
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("AccountPage", (route) => false);
-            },
-            child: Row(
-              children: [
-                Icon(Icons.person),
-                SizedBox(
-                  width: 75,
-                ),
-                Text(
-                  "Account",
-                  style: TextStyle(color: Colors.black),
-                )
-              ],
-            ))
-      ]),
+      drawer: navigationdrawer(context: context),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 50,
-          ),
-          Row(
-            children: [
-              Text("Sync logs automatically"),
-              const SizedBox(
-                width: 50,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            Container(
+              width: screenwidth * 0.99,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: screenwidth * 0.1,
+                  ),
+                  const Text(
+                    "Sync logs automatically",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    width: screenwidth * 0.2,
+                  ),
+                  HorizontalSlidableButton(
+                    onChanged: (position) {
+                      setState(() {
+                        instart = !instart;
+                      });
+                    },
+                    width: screenwidth * 0.2,
+                    height: screenlength * 0.035,
+                    color: (instart)
+                        ? Color.fromARGB(255, 148, 241, 241)
+                        : Color.fromARGB(255, 199, 62, 202),
+                    label: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
+                    buttonWidth: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: (instart)
+                            ? ([
+                                const Text('On'),
+                              ])
+                            : ([
+                                SizedBox(
+                                  width: screenwidth * 0.05,
+                                ),
+                                const Text('Off'),
+                              ]),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: screenwidth * 0.95,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: screenwidth * 0.05,
+                  ),
+                  const Text(
+                    "Receive notifications",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    width: screenwidth * 0.2,
+                  ),
+                  HorizontalSlidableButton(
+                    onChanged: (position) {
+                      setState(() {
+                        instart = !instart;
+                      });
+                    },
+                    width: screenwidth * 0.2,
+                    height: screenlength * 0.035,
+                    color: (instart)
+                        ? Color.fromARGB(255, 148, 241, 241)
+                        : Color.fromARGB(255, 199, 62, 202),
+                    label: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
+                    buttonWidth: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: (instart)
+                            ? ([
+                                const Text('On'),
+                              ])
+                            : ([
+                                SizedBox(
+                                  width: screenwidth * 0.05,
+                                ),
+                                const Text('Off'),
+                              ]),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: screenwidth * 0.95,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: screenwidth * 0.001,
+                  ),
+                  const Text(
+                    "Stay connected",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    width: screenwidth * 0.2,
+                  ),
+                  HorizontalSlidableButton(
+                    onChanged: (position) {
+                      setState(() {
+                        instart = !instart;
+                      });
+                    },
+                    width: screenwidth * 0.2,
+                    height: screenlength * 0.035,
+                    color: (instart)
+                        ? Color.fromARGB(255, 148, 241, 241)
+                        : Color.fromARGB(255, 199, 62, 202),
+                    label: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
+                    buttonWidth: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: (instart)
+                            ? ([
+                                const Text('On'),
+                              ])
+                            : ([
+                                SizedBox(
+                                  width: screenwidth * 0.05,
+                                ),
+                                const Text('Off'),
+                              ]),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

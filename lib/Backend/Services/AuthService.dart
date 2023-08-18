@@ -42,9 +42,10 @@ class Authservice {
     }
   }
 
-  Future<void> Logout() async {
+  void Logout() async {
     try {
       CacheService().ConfirmuserAction("Email", "");
+      cloud_user = null;
     } catch (e) {
       print(e);
     }
@@ -61,24 +62,23 @@ class Authservice {
           .where("password", isEqualTo: password)
           .get();
       List<String> devices = [];
-
       await FirebaseServiceProvider()
           .usersMangementService
           .link_device_and_user(Email: Email);
-      ((querySnapshot0.docs.single.data() as dynamic)["DevicesList"]
-              as List<dynamic>)
-          .forEach((element) {
-        devices.add(element);
-      });
 
-      print("object");
+      for (dynamic item in (querySnapshot0.docs.single.data()
+          as dynamic)["DevicesList"] as List<dynamic>) {
+        devices.add(item);
+      }
+      ;
+
       cloud_user = Cloud_user(
           Email: Email,
           password: password,
           DevicesList: devices,
           Contacts_number: devices.length,
-          isEmailverified: (querySnapshot0.docs.single.data()
-              as dynamic)["isEmailverified"]);
+          isEmailverified: false);
+
       CacheService().ConfirmuserAction("Email", Email);
     } catch (e) {
       print(e);
@@ -96,7 +96,6 @@ class Authservice {
           .adduserdoc(Email: Email, password: password);
 
       CacheService().ConfirmuserAction("Email", Email);
-
       List<String> devlist = [];
       ((querySnapshot0?.docs.single.data() as dynamic)["DevicesList"]
               as List<dynamic>)

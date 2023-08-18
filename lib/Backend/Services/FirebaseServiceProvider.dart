@@ -18,6 +18,8 @@ class FirebaseServiceProvider {
 
   CacheService get cacheservice => CacheService();
 
+  DeviceSystemServiceProvider get systemmangementprovider =>
+      DeviceSystemServiceProvider();
   LogsMangementService get logsmangementservice =>
       LogsMangementService(userscollection, devicescollection);
 
@@ -40,14 +42,19 @@ class FirebaseServiceProvider {
   Future<void> connect() async {
     try {
       Authservice authService = Authservice();
-      await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
-      devicescollection = FirebaseFirestore.instance.collection("devices");
-      userscollection = FirebaseFirestore.instance.collection("users");
-      notificationscollection =
-          FirebaseFirestore.instance.collection("notifications");
-      await DeviceSystemServiceProvider().Initiate();
-      await authService.initialize_from_Cloud_and_Cache(
-          collectionReference: userscollection);
+      if (await systemmangementprovider.check_connection()) {
+        await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+        devicescollection = FirebaseFirestore.instance.collection("devices");
+        userscollection = FirebaseFirestore.instance.collection("users");
+        notificationscollection =
+            FirebaseFirestore.instance.collection("notifications");
+
+        await DeviceSystemServiceProvider().Initiate();
+        await authService.initialize_from_Cloud_and_Cache(
+            collectionReference: userscollection);
+      } else {
+        authService.cloud_user = null;
+      }
     } catch (e) {
       print(e);
     }

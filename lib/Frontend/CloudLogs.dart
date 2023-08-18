@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:topcalls/Backend/Consts.dart';
+import 'package:topcalls/Backend/Services/AuthService.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
+
+import 'NavigationDrawer.dart';
 
 class CloudLogsPage extends StatefulWidget {
   const CloudLogsPage({super.key});
@@ -18,6 +22,9 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Authservice().cloud_user;
+    final screenwidth = MediaQuery.of(context).size.width;
+    final screenlength = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -39,68 +46,7 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
           ),
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
         ),
-        drawer: NavigationDrawer(indicatorColor: Colors.black, children: [
-          TextButton(
-              style: ButtonStyle(
-                iconColor: MaterialStateProperty.all(Colors.black),
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil("CloudLogsPage", (route) => false);
-              },
-              child: const Row(
-                children: [
-                  Icon(Icons.home),
-                  SizedBox(
-                    width: 75,
-                  ),
-                  Text(
-                    "Home",
-                    style: TextStyle(color: Colors.black),
-                  )
-                ],
-              )),
-          TextButton(
-              style: ButtonStyle(
-                iconColor: MaterialStateProperty.all(Colors.black),
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil("Clouddata", (route) => false);
-              },
-              child: Row(
-                children: [
-                  Icon(Icons.cloud),
-                  SizedBox(
-                    width: 75,
-                  ),
-                  Text(
-                    "Cloud data",
-                    style: TextStyle(color: Colors.black),
-                  )
-                ],
-              )),
-          TextButton(
-              style: ButtonStyle(
-                iconColor: MaterialStateProperty.all(Colors.black),
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil("AccountPage", (route) => false);
-              },
-              child: Row(
-                children: [
-                  Icon(Icons.person),
-                  SizedBox(
-                    width: 75,
-                  ),
-                  Text(
-                    "Account",
-                    style: TextStyle(color: Colors.black),
-                  )
-                ],
-              ))
-        ]),
+        drawer: navigationdrawer(context: context),
         body: RefreshIndicator(
           onRefresh: () async {
             setState(() {});
@@ -112,7 +58,7 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                   height: 20,
                 ),
                 Container(
-                    width: 400,
+                    width: screenwidth * 0.9,
                     height: 40,
                     decoration: BoxDecoration(
                         border: Border.all(),
@@ -131,7 +77,7 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                   height: 30,
                 ),
                 Container(
-                  width: 280,
+                  width: screenwidth * 0.7,
                   child: Row(
                     children: [
                       Container(
@@ -171,9 +117,11 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                   height: 4,
                 ),
                 Container(
-                  height: 700,
+                  height: screenlength * 0.75,
                   child: FutureBuilder(
-                      future: null,
+                      future: FirebaseServiceProvider()
+                          .devicesMangementService
+                          .load_cloud_logs(Email: user!.Email),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -182,7 +130,7 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                                 color: Color.fromARGB(255, 130, 190, 239)),
                           );
                         }
-                        if (snapshot.connectionState == ConnectionState.none) {
+                        if (snapshot.connectionState == ConnectionState.done) {
                           if (!snapshot.hasData) {
                             return const Column(
                               children: [
@@ -194,11 +142,19 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                             );
                           }
                           return ListView.builder(
+                            itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
+                              final data = snapshot.data;
                               return Container(
                                 width: 150,
-                                height: 100,
+                                height: 120,
                                 child: Card(
+                                  shadowColor: (data!
+                                              .elementAt(index)
+                                              .fromdevice ==
+                                          DEVICE_ID)
+                                      ? Colors.blue
+                                      : const Color.fromARGB(255, 194, 33, 243),
                                   elevation: 4,
                                   child: Row(
                                     children: [
@@ -213,13 +169,27 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                                           Row(
                                             children: [
                                               Text("Contact name :"),
+                                              Text(
+                                                data!.elementAt(index).name,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
                                             ],
                                           ),
                                           const SizedBox(
                                             height: 5,
                                           ),
                                           Row(
-                                            children: [Text("Contact log :")],
+                                            children: [
+                                              Text("Contact log :"),
+                                              Text(
+                                                data.elementAt(index).number,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
                                           ),
                                           const SizedBox(
                                             height: 5,
@@ -236,9 +206,34 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                                             children: [
                                               Text("Last call :"),
                                             ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text("From device :"),
+                                              Text(
+                                                data
+                                                    .elementAt(index)
+                                                    .fromdevice,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
                                           )
                                         ],
                                       ),
+                                      const SizedBox(
+                                        width: 25,
+                                      ),
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.phone)),
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.share)),
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.list_alt_rounded))
                                     ],
                                   ),
                                 ),
