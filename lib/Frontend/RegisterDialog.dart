@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 "Sign up",
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Row(
@@ -55,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(
                     width: screenwidth / 13,
                   ),
-                  Column(
+                  const Column(
                     children: [
                       Text(
                         "Email",

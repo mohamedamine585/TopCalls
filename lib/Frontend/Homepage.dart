@@ -21,7 +21,7 @@ class _HomepageState extends State<Homepage> {
     return FutureBuilder(
       future: FirebaseServiceProvider().connect(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState != ConnectionState.none) {
           if (Authservice().cloud_user == null) {
             return const SigninPage();
           }

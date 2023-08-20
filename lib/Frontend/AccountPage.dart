@@ -45,10 +45,10 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(
                 height: 50,
               ),
-              const Row(
+              Row(
                 children: [
                   SizedBox(
-                    width: 50,
+                    width: screenwidth * 0.1,
                   ),
                   Text(
                     "Info",
@@ -59,10 +59,10 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+              Row(
                 children: [
                   SizedBox(
-                    width: 50,
+                    width: screenwidth * 0.1,
                   ),
                   Text(
                     "Email",
@@ -72,12 +72,12 @@ class _AccountPageState extends State<AccountPage> {
               ),
               Row(
                 children: [
-                  const SizedBox(
-                    width: 50,
+                  SizedBox(
+                    width: screenwidth * 0.1,
                   ),
                   Container(
                     child: Text("${user?.Email}"),
-                    width: 200,
+                    width: screenwidth * 0.4,
                   ),
                   TextButton(onPressed: () {}, child: const Text("Confirm")),
                   TextButton(onPressed: () {}, child: const Text("Change")),
@@ -89,10 +89,10 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+              Row(
                 children: [
                   SizedBox(
-                    width: 50,
+                    width: screenwidth * 0.1,
                   ),
                   Text(
                     "Activity",
@@ -110,10 +110,10 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+              Row(
                 children: [
                   SizedBox(
-                    width: 50,
+                    width: screenwidth * 0.1,
                   ),
                   Text(
                     "Security",

@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
+import 'package:topcalls/Backend/Services/LogService.dart';
 
 import 'CacheService.dart';
 import '../Cloud_Contact.dart';
@@ -123,6 +125,23 @@ class DevicesMangementService {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<List<Cloud_Log>> fetch_new_logs({required String Email}) async {
+    try {
+      List<Cloud_Log> saved = (await load_cloud_logs(Email: Email))
+          .where((element) => element.fromdevice == DEVICE_ID)
+          .toList();
+      List<Cloud_Log> actual = await LogsService().fetch_top_contact();
+
+      for (Cloud_Log one in saved) {
+        actual.removeWhere((element) => element.number == one.number);
+      }
+      return actual;
+    } catch (e) {
+      print(e);
+    }
+    return [];
   }
 
   Future<List<Cloud_Log>> load_cloud_logs({required String Email}) async {

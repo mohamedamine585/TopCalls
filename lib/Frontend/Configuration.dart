@@ -12,7 +12,8 @@ class Configuration extends StatefulWidget {
 }
 
 class _ConfigurationState extends State<Configuration> {
-  bool instart = false;
+  bool instart1 = false, instart2 = false, instart3 = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,28 +44,33 @@ class _ConfigurationState extends State<Configuration> {
               height: 50,
             ),
             Container(
-              width: screenwidth * 0.99,
+              width: screenwidth * 0.95,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: screenwidth * 0.1,
+                    width: screenwidth * 0.05,
                   ),
-                  const Text(
-                    "Sync logs automatically",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Container(
+                    width: screenwidth * 0.5,
+                    child: const Text(
+                      "Sync logs automatically",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(
-                    width: screenwidth * 0.2,
+                    width: screenwidth * 0.1,
                   ),
                   HorizontalSlidableButton(
                     onChanged: (position) {
                       setState(() {
-                        instart = !instart;
+                        instart2 = !instart2;
                       });
                     },
-                    width: screenwidth * 0.2,
+                    width: screenwidth * 0.15,
                     height: screenlength * 0.035,
-                    color: (instart)
+                    color: (instart1)
                         ? Color.fromARGB(255, 148, 241, 241)
                         : Color.fromARGB(255, 199, 62, 202),
                     label: Container(
@@ -79,7 +85,7 @@ class _ConfigurationState extends State<Configuration> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: (instart)
+                        children: (instart2)
                             ? ([
                                 const Text('On'),
                               ])
@@ -106,22 +112,26 @@ class _ConfigurationState extends State<Configuration> {
                   SizedBox(
                     width: screenwidth * 0.05,
                   ),
-                  const Text(
-                    "Receive notifications",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Container(
+                    width: screenwidth * 0.5,
+                    child: const Text(
+                      "Receive notifications",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(
-                    width: screenwidth * 0.2,
+                    width: screenwidth * 0.1,
                   ),
                   HorizontalSlidableButton(
                     onChanged: (position) {
                       setState(() {
-                        instart = !instart;
+                        instart2 = !instart2;
                       });
                     },
-                    width: screenwidth * 0.2,
+                    width: screenwidth * 0.15,
                     height: screenlength * 0.035,
-                    color: (instart)
+                    color: (instart2)
                         ? Color.fromARGB(255, 148, 241, 241)
                         : Color.fromARGB(255, 199, 62, 202),
                     label: Container(
@@ -136,7 +146,7 @@ class _ConfigurationState extends State<Configuration> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: (instart)
+                        children: (instart2)
                             ? ([
                                 const Text('On'),
                               ])
@@ -163,22 +173,26 @@ class _ConfigurationState extends State<Configuration> {
                   SizedBox(
                     width: screenwidth * 0.001,
                   ),
-                  const Text(
-                    "Stay connected",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Container(
+                    width: screenwidth * 0.5,
+                    child: const Text(
+                      "Stay connected",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(
-                    width: screenwidth * 0.2,
+                    width: screenwidth * 0.1,
                   ),
                   HorizontalSlidableButton(
                     onChanged: (position) {
                       setState(() {
-                        instart = !instart;
+                        instart3 = !instart3;
                       });
                     },
-                    width: screenwidth * 0.2,
+                    width: screenwidth * 0.15,
                     height: screenlength * 0.035,
-                    color: (instart)
+                    color: (instart3)
                         ? Color.fromARGB(255, 148, 241, 241)
                         : Color.fromARGB(255, 199, 62, 202),
                     label: Container(
@@ -193,7 +207,7 @@ class _ConfigurationState extends State<Configuration> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: (instart)
+                        children: (instart3)
                             ? ([
                                 const Text('On'),
                               ])
