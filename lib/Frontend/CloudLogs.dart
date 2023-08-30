@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:topcalls/Backend/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
@@ -23,11 +24,20 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
 
     super.initState();
 
-    Future.delayed(Duration.zero, () {
-      save_logs(context: context);
+    Future.delayed(Duration.zero, () async {
+      final new_data = await FirebaseServiceProvider()
+          .devicesMangementService
+          .fetch_new_logs(Email: user!.Email);
+      if (new_data.isNotEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => const Savelogs(),
+        );
+      }
     });
   }
 
+  List<Cloud_Log> data = [];
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
@@ -148,21 +158,25 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                           ],
                         );
                       }
+                      data = snapshot.data ?? [];
+                      data = snapshot.data
+                              ?.where((element) =>
+                                  element.name.contains(filter.text) ||
+                                  element.number.contains(filter.text))
+                              .toList() ??
+                          [];
                       return RefreshIndicator(
                           onRefresh: () async {
                             setState(() {});
                           },
                           child: ListView.builder(
-                            itemCount: snapshot.data!.length,
+                            itemCount: data.length,
                             itemBuilder: (context, index) {
-                              final data = snapshot.data?.where((element) =>
-                                  element.name.contains(filter.text) ||
-                                  element.number.contains(filter.text));
                               return Container(
                                 width: screenwidth * 0.95,
                                 height: 120,
                                 child: Card(
-                                  shadowColor: (data!
+                                  shadowColor: (data
                                               .elementAt(index)
                                               .fromdevice ==
                                           DEVICE_ID)
@@ -171,83 +185,118 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                                   elevation: 4,
                                   child: Row(
                                     children: [
-                                      Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Container(
-                                                  child:
-                                                      Text("Contact name :")),
-                                              Text(
-                                                data.elementAt(index).name,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text("Contact log :"),
-                                              Text(
-                                                data.elementAt(index).number,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text("Total call duration :")
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text("Last call :"),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text("From device :"),
-                                              Text(
-                                                data
-                                                    .elementAt(index)
-                                                    .fromdevice,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          )
-                                        ],
+                                      Container(
+                                        width: screenwidth * 0.6,
+                                        child: Column(
+                                          children: [
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Container(
+                                              width: screenwidth * 0.95,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text("Contact name :"),
+                                                  Text(
+                                                      data
+                                                          .elementAt(index)
+                                                          .name,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold))
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Container(
+                                              width: screenwidth * 0.95,
+                                              child: Row(
+                                                children: [
+                                                  Text("Contact log :"),
+                                                  Text(
+                                                    data
+                                                        .elementAt(index)
+                                                        .number,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text("Total call duration :")
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text("Last call :"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text("From device :"),
+                                                Text(
+                                                  data
+                                                      .elementAt(index)
+                                                      .fromdevice,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.phone,
-                                            size: screenwidth * 0.05,
-                                          )),
-                                      IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(Icons.share,
-                                              size: screenwidth * 0.05)),
-                                      IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(Icons.list_alt_rounded,
-                                              size: screenwidth * 0.05))
+                                      SizedBox(
+                                        width: screenwidth * 0.01,
+                                      ),
+                                      Container(
+                                        width: screenwidth * 0.3,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: screenwidth * 0.1,
+                                              child: IconButton(
+                                                  onPressed: () {},
+                                                  icon: Icon(
+                                                    Icons.phone,
+                                                    size: screenwidth * 0.05,
+                                                  )),
+                                            ),
+                                            Container(
+                                              width: screenwidth * 0.1,
+                                              child: IconButton(
+                                                  onPressed: () {},
+                                                  icon: Icon(
+                                                    Icons.share,
+                                                    size: screenwidth * 0.05,
+                                                  )),
+                                            ),
+                                            Container(
+                                              width: screenwidth * 0.1,
+                                              child: IconButton(
+                                                  onPressed: () {},
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                    size: screenwidth * 0.05,
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),

@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Backend/Services/LogService.dart';
 
 import 'CacheService.dart';
@@ -8,8 +9,12 @@ import '../Consts.dart';
 
 class DevicesMangementService {
   CollectionReference userscollection, devicescollection;
-
-  DevicesMangementService(this.userscollection, this.devicescollection);
+  static final DevicesMangementService _instance = DevicesMangementService._(
+      FirebaseFirestore.instance.collection("users"),
+      FirebaseFirestore.instance.collection("devices"));
+  DevicesMangementService._(this.userscollection, this.devicescollection);
+  factory DevicesMangementService(userscollection, devicescollection) =>
+      _instance;
 
   Future<void> Store_data({required List<String> data}) async {
     try {
@@ -100,14 +105,13 @@ class DevicesMangementService {
     try {
       QuerySnapshot querydevice =
           await devicescollection.where("Deviceid", isEqualTo: DEVICE_ID).get();
-      List<dynamic> current_logs =
-          await (querydevice.docs.first.data() as dynamic)["logs"];
+
       List<String> logs, names, fromdevice;
       logs = [];
       names = [];
       fromdevice = [];
       cloud_logs.forEach((element) {
-        if (!current_logs.contains(element)) {
+        if (element.is_saved) {
           logs.add(element.number);
           names.add(element.name);
           fromdevice.add(DEVICE_ID ?? "");
@@ -116,6 +120,12 @@ class DevicesMangementService {
       if (querydevice.docs.isEmpty) {
         await add_devicedoc(logs: logs, names: names, fromdevice: fromdevice);
       } else {
+        dynamic data = querydevice.docs.first.data();
+        for (int i = 0; i < (data["logs"] as List<dynamic>).length; i++) {
+          logs.add(data["logs"][i]);
+          names.add(data["names"][i]);
+          fromdevice.add(data["fromdevice"][i]);
+        }
         await update_devicedoc(
             logs: logs,
             names: names,
@@ -129,9 +139,8 @@ class DevicesMangementService {
 
   Future<List<Cloud_Log>> fetch_new_logs({required String Email}) async {
     try {
-      List<Cloud_Log> saved = (await load_cloud_logs(Email: Email))
-          .where((element) => element.fromdevice == DEVICE_ID)
-          .toList();
+      List<Cloud_Log> saved = (await load_cloud_logs(Email: Email));
+      print(saved.length);
       List<Cloud_Log> actual = await LogsService().fetch_top_contact();
 
       for (Cloud_Log one in saved) {
