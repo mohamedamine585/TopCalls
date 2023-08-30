@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
+import 'package:topcalls/Frontend/AlertDialogs.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 import 'package:topcalls/Frontend/CloudLogs.dart';
 import 'package:topcalls/Frontend/Consts.dart';

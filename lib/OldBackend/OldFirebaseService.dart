@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:topcalls/Backend/Cloud_user.dart';
 import 'package:topcalls/Backend/Consts.dart';
+import 'package:topcalls/Backend/Modules/Cloud_user.dart';
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/firebase_options.dart';
 import 'package:topcalls/Backend/Services/CacheService.dart';

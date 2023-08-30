@@ -1,20 +1,20 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Backend/Services/LogService.dart';
 
 import 'CacheService.dart';
-import '../Cloud_Contact.dart';
+import '../Modules/Cloud_Contact.dart';
 import '../Consts.dart';
 
 class DevicesMangementService {
   CollectionReference userscollection, devicescollection;
   static final DevicesMangementService _instance = DevicesMangementService._(
-      FirebaseFirestore.instance.collection("users"),
-      FirebaseFirestore.instance.collection("devices"));
+      FirebaseServiceProvider().userscollection,
+      FirebaseServiceProvider().devicescollection);
   DevicesMangementService._(this.userscollection, this.devicescollection);
-  factory DevicesMangementService(userscollection, devicescollection) =>
-      _instance;
+  factory DevicesMangementService() => _instance;
 
   Future<void> Store_data({required List<String> data}) async {
     try {
@@ -121,7 +121,12 @@ class DevicesMangementService {
         await add_devicedoc(logs: logs, names: names, fromdevice: fromdevice);
       } else {
         dynamic data = querydevice.docs.first.data();
-        for (int i = 0; i < (data["logs"] as List<dynamic>).length; i++) {
+        print(data["logs"]);
+        for (int i = 0;
+            (i < ((data["logs"] as List<dynamic>? ?? [])).length) &&
+                data["names"] != null &&
+                data["fromdev"] != null;
+            i++) {
           logs.add(data["logs"][i]);
           names.add(data["names"][i]);
           fromdevice.add(data["fromdevice"][i]);
@@ -140,7 +145,7 @@ class DevicesMangementService {
   Future<List<Cloud_Log>> fetch_new_logs({required String Email}) async {
     try {
       List<Cloud_Log> saved = (await load_cloud_logs(Email: Email));
-      print(saved.length);
+
       List<Cloud_Log> actual = await LogsService().fetch_top_contact();
 
       for (Cloud_Log one in saved) {
@@ -163,17 +168,22 @@ class DevicesMangementService {
       List<dynamic> names = [];
       List<dynamic> fromdev = [];
       for (dynamic Element in ((queryuser.docs.first.data()
-          as dynamic)["DevicesList"] as List<dynamic>)) {
+              as dynamic)["DevicesList"] as List<dynamic>?) ??
+          []) {
         DocumentSnapshot documentSnapshot =
             await devicescollection.doc(Element).get();
         logs.addAll(
-            (documentSnapshot.data() as dynamic)["logs"] as List<dynamic>);
+            ((documentSnapshot.data() as dynamic)["logs"] as List<dynamic>? ??
+                []));
         names.addAll(
-            (documentSnapshot.data() as dynamic)["names"] as List<dynamic>);
-        fromdev.addAll((documentSnapshot.data() as dynamic)["fromdevice"]
-            as List<dynamic>);
+            ((documentSnapshot.data() as dynamic)["names"] as List<dynamic>?) ??
+                []);
+        fromdev.addAll(((documentSnapshot.data() as dynamic)["fromdevice"]
+                as List<dynamic>?) ??
+            []);
       }
-      for (int i = 0; i < logs.length; i++) {
+
+      for (int i = 0; i < logs.length && i < names.length; i++) {
         cloud_contacts.add(
             Cloud_Log(number: logs[i], name: names[i], fromdevice: fromdev[i]));
       }

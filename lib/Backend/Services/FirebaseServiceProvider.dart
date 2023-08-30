@@ -24,13 +24,13 @@ class FirebaseServiceProvider {
       LogsMangementService(userscollection, devicescollection);
 
   DevicesMangementService get devicesMangementService =>
-      DevicesMangementService(userscollection, devicescollection);
+      DevicesMangementService();
 
   UsersMangementService get usersMangementService =>
       UsersMangementService(userscollection, devicescollection);
 
   AccountMangementService get accountmangementservice =>
-      AccountMangementService(userscollection, devicescollection);
+      AccountMangementService();
   NotificationsService get notificationsservice =>
       NotificationsService(userscollection, notificationscollection);
 
@@ -39,7 +39,7 @@ class FirebaseServiceProvider {
   FirebaseServiceProvider._();
   factory FirebaseServiceProvider() => _instance;
 
-  Future<void> connect() async {
+  Future<bool?> connect() async {
     try {
       Authservice authService = Authservice();
       if (await systemmangementprovider.check_connection()) {
@@ -52,11 +52,14 @@ class FirebaseServiceProvider {
         await DeviceSystemServiceProvider().Initiate();
         await authService.initialize_from_Cloud_and_Cache(
             collectionReference: userscollection);
+        return true;
       } else {
         authService.cloud_user = null;
+        return false;
       }
     } catch (e) {
       print(e);
     }
+    return null;
   }
 }

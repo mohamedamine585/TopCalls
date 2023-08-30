@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 
+import 'AlertDialogs.dart';
 import 'Consts.dart';
 
 class SigninPage extends StatefulWidget {
@@ -120,18 +121,29 @@ class _SigninPageState extends State<SigninPage> {
                           backgroundColor: MaterialStateProperty.all(
                               Color.fromARGB(218, 94, 227, 250))),
                       onPressed: () async {
-                        await Authservice().Login(
-                            collectionReference:
-                                FirebaseServiceProvider().userscollection,
-                            Email: email.text,
-                            password: password.text);
-                        final user = Authservice().cloud_user;
+                        if (await FirebaseServiceProvider()
+                            .systemmangementprovider
+                            .check_connection()) {
+                          await Authservice().Login(
+                              collectionReference:
+                                  FirebaseServiceProvider().userscollection,
+                              Email: email.text,
+                              password: password.text);
+                          final user = Authservice().cloud_user;
 
-                        if (user != null) {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              "CloudLogsPage", (route) => false);
+                          if (user != null) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "CloudLogsPage", (route) => false);
+                          } else {
+                            print(user);
+                          }
                         } else {
-                          print(user);
+                          showDialog(
+                            context: context,
+                            builder: (context) => show_alert(
+                                context: context,
+                                message: "Check your internet connection"),
+                          );
                         }
                       },
                       child: const Text(

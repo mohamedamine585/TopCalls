@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:topcalls/Backend/Cloud_Contact.dart';
+import 'package:topcalls/Backend/Modules/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
-import 'package:topcalls/Backend/Services/UsersMangementService.dart';
 
 class NotificationsService {
   CollectionReference userscollection, notifactionscollection;

@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobile_number/mobile_number.dart';
-import 'package:topcalls/Backend/Cloud_user.dart';
+import 'package:topcalls/Backend/Modules/Cloud_user.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
-import 'package:topcalls/Backend/Services/LogService.dart';
 
 class AccountMangementService {
   Cloud_user? user;
   CollectionReference userscollection, devicescollection;
-  AccountMangementService(this.userscollection, this.devicescollection);
+  static final AccountMangementService _instance = AccountMangementService._(
+      FirebaseServiceProvider().userscollection,
+      FirebaseServiceProvider().devicescollection);
+  AccountMangementService._(this.userscollection, this.devicescollection);
+  factory AccountMangementService() => _instance;
   Future<void> change_password(
       {required String oldpassword, required String newpassword}) async {
     try {

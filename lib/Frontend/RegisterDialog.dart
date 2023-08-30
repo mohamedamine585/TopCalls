@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:topcalls/Backend/Consts.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 
 import '../Backend/Services/AuthService.dart';
+import 'AlertDialogs.dart';
 import 'Consts.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -160,15 +162,33 @@ class _RegisterPageState extends State<RegisterPage> {
                           backgroundColor: MaterialStateProperty.all(
                               Color.fromARGB(218, 94, 227, 250))),
                       onPressed: () async {
-                        String deviceid = DEVICE_ID ?? "";
-                        final authservice = Authservice();
-                        if (password.text == cnfpassword.text) {
-                          await authservice.Register(
-                              Email: email.text, password: password.text);
+                        if (await FirebaseServiceProvider()
+                            .systemmangementprovider
+                            .check_connection()) {
+                          final authservice = Authservice();
+                          if (password.text == cnfpassword.text) {
+                            await authservice.Register(
+                                Email: email.text, password: password.text);
+                          }
+                          if (authservice.cloud_user != null) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "CloudLogsPage", (route) => false);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => show_alert(
+                                  context: context,
+                                  message: "Passwords don't match"),
+                            );
+                          }
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => show_alert(
+                                context: context,
+                                message: "Check your internet connection"),
+                          );
                         }
-                        if (authservice.cloud_user != null) {
-                          print(authservice.cloud_user?.Email);
-                        } else {}
                       },
                       child: const Text(
                         "Get Saved",

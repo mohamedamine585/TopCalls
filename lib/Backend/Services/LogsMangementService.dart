@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:topcalls/Backend/Services/DevicesMangement.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 
-import '../Cloud_Contact.dart';
+import '../Modules/Cloud_Contact.dart';
 import '../Consts.dart';
 
 class LogsMangementService {
@@ -14,12 +14,12 @@ class LogsMangementService {
           await userscollection.where("Email", isEqualTo: email).get();
 
       bool is_in = false;
-      List<Cloud_Log> his_logs =
-              await DevicesMangementService(userscollection, devicescollection)
-                  .load_cloud_logs(Email: email),
-          his_black_logs =
-              await DevicesMangementService(userscollection, devicescollection)
-                  .load_black_list(email: email);
+      List<Cloud_Log> his_logs = await FirebaseServiceProvider()
+              .devicesMangementService
+              .load_cloud_logs(Email: email),
+          his_black_logs = await FirebaseServiceProvider()
+              .devicesMangementService
+              .load_black_list(email: email);
 
       // look if he already has it
       for (Cloud_Log Log in his_logs) {

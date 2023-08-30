@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:topcalls/Backend/Cloud_user.dart';
+import 'package:topcalls/Backend/Modules/Cloud_user.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Backend/Services/CacheService.dart';
 
@@ -62,6 +61,7 @@ class Authservice {
           .where("password", isEqualTo: password)
           .get();
       List<String> devices = [];
+      print(querySnapshot0.docs.length);
       await FirebaseServiceProvider()
           .usersMangementService
           .link_device_and_user(Email: Email);
@@ -70,7 +70,6 @@ class Authservice {
           as dynamic)["DevicesList"] as List<dynamic>) {
         devices.add(item);
       }
-      ;
 
       cloud_user = Cloud_user(
           Email: Email,

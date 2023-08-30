@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:topcalls/Backend/Cloud_Contact.dart';
+import 'package:topcalls/Backend/Modules/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
-import 'package:topcalls/Backend/Services/LogService.dart';
 import 'package:topcalls/Frontend/Dialogs.dart';
 
 import 'NavigationDrawer.dart';
@@ -158,7 +157,6 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                           ],
                         );
                       }
-                      data = snapshot.data ?? [];
                       data = snapshot.data
                               ?.where((element) =>
                                   element.name.contains(filter.text) ||
