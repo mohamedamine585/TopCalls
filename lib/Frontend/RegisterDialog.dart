@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:topcalls/Backend/Consts.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 
 import '../Backend/Services/AuthService.dart';
@@ -170,7 +169,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             await authservice.Register(
                                 Email: email.text, password: password.text);
                           }
-                          if (authservice.cloud_user != null) {
+                          if (authservice.user != null) {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 "CloudLogsPage", (route) => false);
                           } else {

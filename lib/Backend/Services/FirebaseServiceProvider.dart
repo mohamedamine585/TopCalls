@@ -54,7 +54,7 @@ class FirebaseServiceProvider {
             collectionReference: userscollection);
         return true;
       } else {
-        authService.cloud_user = null;
+        authService.user = null;
         return false;
       }
     } catch (e) {

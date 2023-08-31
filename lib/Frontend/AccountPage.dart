@@ -13,7 +13,7 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
-    final user = Authservice().cloud_user;
+    final user = Authservice().user;
     print(screenwidth);
     return Scaffold(
         backgroundColor: Colors.white,
@@ -123,35 +123,6 @@ class _AccountPageState extends State<AccountPage> {
               ),
               const SizedBox(
                 height: 20,
-              ),
-              const Row(
-                children: [
-                  SizedBox(
-                    width: 50,
-                  ),
-                  Text(
-                    "Password",
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 50,
-                  ),
-                  Container(
-                    width: 200,
-                    child: Text(
-                      "${user?.password}",
-                      style: TextStyle(fontFamily: AutofillHints.password),
-                    ),
-                  ),
-                  TextButton(onPressed: () {}, child: const Text("Change"))
-                ],
               ),
               Center(
                 child: Container(

@@ -10,33 +10,24 @@ class Authservice {
   factory Authservice() => _instance;
 
   late final CollectionReference collectionReference;
-  Cloud_user? cloud_user;
+  Cloud_user? user;
 
   Future<void> initialize_from_Cloud_and_Cache(
       {required CollectionReference collectionReference}) async {
     try {
-      String? Email = await CacheService().ProoveUserAuthentication("Email");
+      String? Email = await CacheService().ProoveAction("Email");
       if (Email != null && Email != "") {
-        QuerySnapshot querySnapshot =
-            await collectionReference.where("Email", isEqualTo: Email).get();
-        List<String> lists = [];
-        ((querySnapshot.docs.single.data() as dynamic)["DevicesList"]
-                as List<dynamic>)
-            .forEach((element) {
-          lists.add(element);
-        });
-        cloud_user = Cloud_user(
-            Email: Email,
-            DevicesList: lists,
-            password: (querySnapshot.docs.single.data() as dynamic)["password"],
-            Contacts_number: lists.length,
-            isEmailverified: (querySnapshot.docs.single.data()
-                as dynamic)["isEmailverified"]);
+        QuerySnapshot querySnapshot = await collectionReference
+            .where("Email", isEqualTo: Email)
+            .limit(1)
+            .get();
+
+        user = Cloud_user.from_firebase(data: querySnapshot.docs.first.data());
       } else {
-        cloud_user = null;
+        user = null;
       }
     } catch (e) {
-      cloud_user = null;
+      user = null;
       print(e);
     }
   }
@@ -44,7 +35,7 @@ class Authservice {
   void Logout() async {
     try {
       CacheService().ConfirmuserAction("Email", "");
-      cloud_user = null;
+      user = null;
     } catch (e) {
       print(e);
     }
@@ -56,32 +47,19 @@ class Authservice {
     required String password,
   }) async {
     try {
-      QuerySnapshot querySnapshot0 = await collectionReference
+      QuerySnapshot? querySnapshot0 = await collectionReference
           .where("Email", isEqualTo: Email)
           .where("password", isEqualTo: password)
           .get();
-      List<String> devices = [];
-      print(querySnapshot0.docs.length);
       await FirebaseServiceProvider()
           .usersMangementService
           .link_device_and_user(Email: Email);
-
-      for (dynamic item in (querySnapshot0.docs.single.data()
-          as dynamic)["DevicesList"] as List<dynamic>) {
-        devices.add(item);
-      }
-
-      cloud_user = Cloud_user(
-          Email: Email,
-          password: password,
-          DevicesList: devices,
-          Contacts_number: devices.length,
-          isEmailverified: false);
+      user = Cloud_user.from_firebase(data: querySnapshot0.docs.first);
 
       CacheService().ConfirmuserAction("Email", Email);
     } catch (e) {
       print(e);
-      cloud_user = null;
+      user = null;
     }
   }
 
@@ -90,31 +68,56 @@ class Authservice {
     required String password,
   }) async {
     try {
-      QuerySnapshot? querySnapshot0 = await FirebaseServiceProvider()
-          .usersMangementService
-          .adduserdoc(Email: Email, password: password);
+      ////
+      ////// get mobile_data
+      ///
 
-      CacheService().ConfirmuserAction("Email", Email);
-      List<String> devlist = [];
-      ((querySnapshot0?.docs.single.data() as dynamic)["DevicesList"]
-              as List<dynamic>)
-          .forEach((element) {
-        devlist.add(element);
+      final mobiledata = await FirebaseServiceProvider()
+          .systemmangementprovider
+          .get_mobile_data();
+      List<String> phonenumbers = [], simcards = [];
+      mobiledata?.forEach((element) {
+        phonenumbers.add(element.key);
+        simcards.add(element.value);
       });
 
+      ///
+      ////
+      ///
+      ///
+      ///
+
+      ////
+      ///// create a doc for a user and may be it will be only assigned
+      ///
+      QuerySnapshot? querySnapshot0 = await FirebaseServiceProvider()
+          .usersMangementService
+          .adduserdoc(
+              Email: Email,
+              password: password,
+              phonenumbers: phonenumbers,
+              simcards: simcards);
+
+      ////
+      ///
+      ///
+      ///  Store Email in cache for auto future login
+
+      CacheService().ConfirmuserAction("Email", Email);
+
+      ////
+      ///
+      ///// we have a new cloud_user
+      ///
       if (querySnapshot0 != null) {
-        List<String> his_logs = await FirebaseServiceProvider()
-            .devicesMangementService
-            .Load_data(Email: Email);
-        cloud_user = Cloud_user(
-            Email: Email,
-            DevicesList: devlist,
-            password: password,
-            Contacts_number: devlist.length,
-            isEmailverified: (querySnapshot0.docs.single.data()
-                as dynamic)["isEmailverified"]);
+        user = Cloud_user.from_firebase_first_time(
+            data: querySnapshot0.docs.first,
+            phonenumbers: phonenumbers,
+            simcards: simcards);
+
+        ////
       } else {
-        cloud_user = null;
+        user = null;
       }
     } catch (e) {
       print(e);

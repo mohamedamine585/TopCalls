@@ -14,7 +14,7 @@ class Savelogs extends StatefulWidget {
 }
 
 class _SavelogsState extends State<Savelogs> {
-  final user = Authservice().cloud_user;
+  final user = Authservice().user;
   List<Cloud_Log> data = [];
   bool select_all = false, should_reload = true;
   @override
@@ -65,7 +65,8 @@ class _SavelogsState extends State<Savelogs> {
                                 onPressed: () async {
                                   await FirebaseServiceProvider()
                                       .devicesMangementService
-                                      .store_cloud_logs(cloud_logs: data);
+                                      .store_cloud_logs(
+                                          cloud_logs: data, email: user!.Email);
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       "CloudLogsPage", (route) => false);
                                 },

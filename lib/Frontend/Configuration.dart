@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:slidable_button/slidable_button.dart';
+import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Frontend/Consts.dart';
 
 import 'NavigationDrawer.dart';
@@ -13,6 +14,14 @@ class Configuration extends StatefulWidget {
 
 class _ConfigurationState extends State<Configuration> {
   bool instart1 = false, instart2 = false, instart3 = false;
+
+  SlidableButtonPosition ipos1 = SlidableButtonPosition.start,
+      ipos2 = SlidableButtonPosition.start,
+      ipos3 = SlidableButtonPosition.start;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +60,15 @@ class _ConfigurationState extends State<Configuration> {
                   SizedBox(
                     width: screenwidth * 0.05,
                   ),
-                  Container(
-                    width: screenwidth * 0.5,
-                    child: const Text(
-                      "Sync logs automatically",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: EdgeInsets.only(left: screenwidth * 0.005),
+                    child: Container(
+                      width: screenwidth * 0.5,
+                      child: const Text(
+                        "Sync logs automatically",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -64,8 +76,12 @@ class _ConfigurationState extends State<Configuration> {
                   ),
                   HorizontalSlidableButton(
                     onChanged: (position) {
+                      FirebaseServiceProvider()
+                          .systemmangementprovider
+                          .sync_logs_automatically(
+                              sync: (position.index == 0) ? false : true);
                       setState(() {
-                        instart2 = !instart2;
+                        instart1 = !instart1;
                       });
                     },
                     width: screenwidth * 0.15,
@@ -85,16 +101,12 @@ class _ConfigurationState extends State<Configuration> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: (instart2)
-                            ? ([
-                                const Text('On'),
-                              ])
-                            : ([
-                                SizedBox(
-                                  width: screenwidth * 0.05,
-                                ),
-                                const Text('Off'),
-                              ]),
+                        children: ([
+                          SizedBox(
+                            width: screenwidth * 0.05,
+                          ),
+                          const Text('Off'),
+                        ]),
                       ),
                     ),
                   ),
@@ -112,12 +124,15 @@ class _ConfigurationState extends State<Configuration> {
                   SizedBox(
                     width: screenwidth * 0.05,
                   ),
-                  Container(
-                    width: screenwidth * 0.5,
-                    child: const Text(
-                      "Receive notifications",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: EdgeInsets.only(left: screenwidth * 0.005),
+                    child: Container(
+                      width: screenwidth * 0.5,
+                      child: const Text(
+                        "Receive notifications",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -142,21 +157,14 @@ class _ConfigurationState extends State<Configuration> {
                           color: Color.fromARGB(255, 0, 0, 0)),
                     ),
                     buttonWidth: 20,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: (instart2)
-                            ? ([
-                                const Text('On'),
-                              ])
-                            : ([
-                                SizedBox(
-                                  width: screenwidth * 0.05,
-                                ),
-                                const Text('Off'),
-                              ]),
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: ([
+                        SizedBox(
+                          width: screenwidth * 0.05,
+                        ),
+                        const Text('Off'),
+                      ]),
                     ),
                   ),
                 ],
@@ -173,12 +181,18 @@ class _ConfigurationState extends State<Configuration> {
                   SizedBox(
                     width: screenwidth * 0.001,
                   ),
-                  Container(
-                    width: screenwidth * 0.5,
-                    child: const Text(
-                      "Stay connected",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: EdgeInsets.only(left: screenwidth * 0.05),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: screenwidth * 0.005),
+                      child: Container(
+                        width: screenwidth * 0.5,
+                        child: const Text(
+                          "Stay connected",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -186,6 +200,10 @@ class _ConfigurationState extends State<Configuration> {
                   ),
                   HorizontalSlidableButton(
                     onChanged: (position) {
+                      FirebaseServiceProvider()
+                          .systemmangementprovider
+                          .stay_signed_in(
+                              stay: (position.index == 0) ? false : true);
                       setState(() {
                         instart3 = !instart3;
                       });
@@ -207,16 +225,12 @@ class _ConfigurationState extends State<Configuration> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: (instart3)
-                            ? ([
-                                const Text('On'),
-                              ])
-                            : ([
-                                SizedBox(
-                                  width: screenwidth * 0.05,
-                                ),
-                                const Text('Off'),
-                              ]),
+                        children: ([
+                          SizedBox(
+                            width: screenwidth * 0.05,
+                          ),
+                          const Text('Off'),
+                        ]),
                       ),
                     ),
                   ),

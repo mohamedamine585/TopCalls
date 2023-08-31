@@ -16,7 +16,7 @@ class CloudLogsPage extends StatefulWidget {
 
 class _CloudLogsPageState extends State<CloudLogsPage> {
   late final TextEditingController filter;
-  final user = Authservice().cloud_user;
+  final user = Authservice().user;
   @override
   void initState() {
     filter = TextEditingController();

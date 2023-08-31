@@ -111,6 +111,8 @@ class UsersMangementService {
   Future<QuerySnapshot?> adduserdoc({
     required String Email,
     required String password,
+    List<String>? phonenumbers,
+    List<String>? simcards,
   }) async {
     try {
       QuerySnapshot queryusers =
@@ -126,7 +128,9 @@ class UsersMangementService {
             "password": password,
             "lastconnection": Timestamp.now(),
             "isEmailverified": false,
-            "DevicesList": [querydevices.docs.first.id]
+            "DevicesList": [querydevices.docs.first.id],
+            "phonenumbers": phonenumbers,
+            "simcards": simcards
           });
         }
       }

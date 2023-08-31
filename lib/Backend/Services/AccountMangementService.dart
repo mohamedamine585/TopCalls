@@ -11,7 +11,7 @@ class AccountMangementService {
       FirebaseServiceProvider().devicescollection);
   AccountMangementService._(this.userscollection, this.devicescollection);
   factory AccountMangementService() => _instance;
-  Future<void> change_password(
+  /* Future<void> change_password(
       {required String oldpassword, required String newpassword}) async {
     try {
       if (user?.password == oldpassword) {
@@ -27,7 +27,7 @@ class AccountMangementService {
       print(e);
     }
   }
-
+*/
   Future<void> verify_email() async {}
 
   Future<void> delete_account() async {
@@ -43,38 +43,7 @@ class AccountMangementService {
       print(e);
     }
   }
-
-  Future<void> deploy_phonenumber() async {
-    try {
-      await MobileNumber.requestPhonePermission;
-      if (await MobileNumber.hasPhonePermission) {
-        // ask for permession
-        String? number = await MobileNumber.mobileNumber;
-        if (number != null) {
-          // if he has a mobilenumber
-          DocumentSnapshot userdoc = (await userscollection
-                  .where("Email", isEqualTo: user?.Email)
-                  .get())
-              .docs
-              .first;
-          if (userdoc.exists) {
-            List<dynamic>? phonenumbers =
-                (userdoc.data() as dynamic)["phonenumbers"];
-            await userscollection.doc(userdoc.id).update({
-              "phonenumbers":
-                  (phonenumbers != null) ? phonenumbers + [number] : [number]
-            });
-            user?.phonenumber = number;
-          }
-        }
-      } else {
-        Exception(["No permission given"]);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
+/*
   Future<List<String>> who_have_my_number() async {
     List<String> who_have_ur_number = [];
     try {
@@ -97,5 +66,5 @@ class AccountMangementService {
       print(e);
     }
     return who_have_ur_number;
-  }
+  }*/
 }

@@ -6,7 +6,7 @@ class CacheService {
     await prefs.setString(key, value);
   }
 
-  Future<String?> ProoveUserAuthentication(String key) async {
+  Future<String?> ProoveAction(String key) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
   }

@@ -122,10 +122,6 @@ class OLDFirebaseService {
           DevicesList:
               (querySnapshot0.docs.single.data() as dynamic)["DevicesList"],
           Email: Email,
-          password: password,
-          Contacts_number:
-              ((querySnapshot0.docs.single.data() as dynamic)["DevicesList"])
-                  .length,
           isEmailverified: false);
     } catch (e) {
       print(e);

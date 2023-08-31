@@ -23,6 +23,8 @@ class _SigninPageState extends State<SigninPage> {
     super.dispose();
   }
 
+  final user = Authservice().user;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,7 +131,6 @@ class _SigninPageState extends State<SigninPage> {
                                   FirebaseServiceProvider().userscollection,
                               Email: email.text,
                               password: password.text);
-                          final user = Authservice().cloud_user;
 
                           if (user != null) {
                             Navigator.of(context).pushNamedAndRemoveUntil(
