@@ -9,12 +9,11 @@ class DeviceSystemServiceProvider {
   Future<List<MapEntry<String, String>>?> get_mobile_data() async {
     List<MapEntry<String, String>> sim_data = [];
     try {
-      await MobileNumber.requestPhonePermission;
-      final has_perm = await MobileNumber.hasPhonePermission;
-      if (has_perm) {
-        FirebaseServiceProvider()
-            .cacheservice
-            .ConfirmuserAction("phonenumbergiven", "yes");
+      final take_perm = await FirebaseServiceProvider()
+          .cacheservice
+          .ProoveAction("provenumbergiven");
+
+      if (take_perm == "yes") {
         final sim_cards = await MobileNumber.getSimCards;
         if (sim_cards != null) {
           for (SimCard one in sim_cards) {
@@ -23,14 +22,12 @@ class DeviceSystemServiceProvider {
           }
         }
       } else {
-        FirebaseServiceProvider()
-            .cacheservice
-            .ConfirmuserAction("phonenumbergiven", "no");
         return null;
       }
     } catch (e) {
       print(e);
     }
+    print(sim_data);
     return sim_data;
   }
 

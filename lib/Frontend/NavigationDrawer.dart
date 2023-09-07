@@ -62,5 +62,25 @@ Widget navigationdrawer({required BuildContext context}) {
             )
           ],
         )),
+    TextButton(
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("activity", (route) => false);
+        },
+        child: const Row(
+          children: [
+            Icon(
+              Icons.bar_chart_sharp,
+              color: Colors.black,
+            ),
+            SizedBox(
+              width: 75,
+            ),
+            Text(
+              "Activity",
+              style: TextStyle(color: Colors.black),
+            )
+          ],
+        ))
   ]);
 }

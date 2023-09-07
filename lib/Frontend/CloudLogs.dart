@@ -268,7 +268,15 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                                             Container(
                                               width: screenwidth * 0.1,
                                               child: IconButton(
-                                                  onPressed: () {},
+                                                  onPressed: () async {
+                                                    await FirebaseServiceProvider()
+                                                        .systemmangementprovider
+                                                        .make_call(
+                                                            phoneNumber: data
+                                                                .elementAt(
+                                                                    index)
+                                                                .number);
+                                                  },
                                                   icon: Icon(
                                                     Icons.phone,
                                                     size: screenwidth * 0.05,

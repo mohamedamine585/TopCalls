@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:topcalls/Frontend/ActivityPage.dart';
 
 import 'AccountPage.dart';
 import 'AuthenticationDialog.dart';
@@ -15,6 +16,7 @@ MaterialApp get app => MaterialApp(
         "Signin": (context) => const SigninPage(),
         "Homepage": (context) => const Homepage(),
         "Register": (context) => const RegisterPage(),
+        "activity": (context) => const ActivityPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'TopCalls',

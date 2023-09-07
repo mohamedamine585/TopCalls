@@ -21,8 +21,27 @@ class Authservice {
             .where("Email", isEqualTo: Email)
             .limit(1)
             .get();
+        final mobiledata = await FirebaseServiceProvider()
+            .systemmangementprovider
+            .get_mobile_data();
 
-        user = Cloud_user.from_firebase(data: querySnapshot.docs.first.data());
+        List<String> phonenumbers = [], simcards = [];
+        mobiledata?.forEach((element) {
+          phonenumbers.add(element.key);
+          simcards.add(element.value);
+        });
+
+        final phone_numbers = (querySnapshot.docs.first.data()
+            as Map<String, dynamic>)["phonenumbers"];
+        final sim_cards = (querySnapshot.docs.first.data()
+            as Map<String, dynamic>)["sim_cards"];
+        if (phone_numbers == null) {
+          await collectionReference
+              .doc(querySnapshot.docs.first.id)
+              .update({"phonenumbers": phonenumbers, "simcards": simcards});
+        }
+        user = Cloud_user.from_firebase(
+            data: querySnapshot.docs.first.data() as Map<String, dynamic>);
       } else {
         user = null;
       }
@@ -54,7 +73,8 @@ class Authservice {
       await FirebaseServiceProvider()
           .usersMangementService
           .link_device_and_user(Email: Email);
-      user = Cloud_user.from_firebase(data: querySnapshot0.docs.first);
+      user = Cloud_user.from_firebase(
+          data: querySnapshot0.docs.first.data() as Map<String, dynamic>);
 
       CacheService().ConfirmuserAction("Email", Email);
     } catch (e) {

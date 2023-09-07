@@ -42,7 +42,7 @@ class Cloud_user {
       sim_cards: simcards,
     );
   }
-  factory Cloud_user.from_firebase({required dynamic data}) {
+  factory Cloud_user.from_firebase({required Map<String, dynamic> data}) {
     final email = data["Email"] as String;
     final isemailverified = data["isEmailverified"] as bool;
     final deviceslist = to_string_list(data["DevicesList"], null);

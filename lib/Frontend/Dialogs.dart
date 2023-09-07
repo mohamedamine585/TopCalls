@@ -44,15 +44,15 @@ class _SavelogsState extends State<Savelogs> {
             child: Column(
               children: [
                 Container(
-                    height: screenlength * 0.1,
+                    height: screenlength * 0.15,
                     child: Row(
                       children: [
                         SizedBox(
                           width: screenwidth * 0.08,
                         ),
                         Container(
+                            height: screenlength * 0.07,
                             width: screenwidth * 0.3,
-                            height: 50,
                             child: TextButton(
                                 style: ButtonStyle(
                                     tapTargetSize: MaterialTapTargetSize.padded,
@@ -80,7 +80,7 @@ class _SavelogsState extends State<Savelogs> {
                         ),
                         Container(
                             width: screenwidth * 0.3,
-                            height: 50,
+                            height: screenlength * 0.07,
                             child: TextButton(
                                 style: ButtonStyle(
                                     tapTargetSize: MaterialTapTargetSize.padded,
@@ -124,7 +124,7 @@ class _SavelogsState extends State<Savelogs> {
                   thickness: 0.5,
                 ),
                 Container(
-                  height: screenlength * 0.8,
+                  height: screenlength * 0.4,
                   child: FutureBuilder(
                       future: (should_reload)
                           ? FirebaseServiceProvider()

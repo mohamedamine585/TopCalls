@@ -14,7 +14,6 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     final user = Authservice().user;
-    print(screenwidth);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -82,27 +81,6 @@ class _AccountPageState extends State<AccountPage> {
                   TextButton(onPressed: () {}, child: const Text("Confirm")),
                   TextButton(onPressed: () {}, child: const Text("Change")),
                 ],
-              ),
-              const Divider(
-                thickness: 0.5,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: screenwidth * 0.1,
-                  ),
-                  Text(
-                    "Activity",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              Placeholder(
-                fallbackHeight: screenlength * 0.1,
-                fallbackWidth: 0.1,
               ),
               const Divider(
                 thickness: 0.5,
