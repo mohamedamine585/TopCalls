@@ -18,6 +18,8 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
+    screenlength = MediaQuery.of(context).size.height;
+    screenwidth = MediaQuery.of(context).size.width;
     return FutureBuilder(
       future: FirebaseServiceProvider().connect(),
       builder: (context, snapshot) {
