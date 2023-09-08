@@ -1,4 +1,8 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypt/crypt.dart';
+import 'package:crypto/crypto.dart';
 import 'package:topcalls/Backend/Modules/Cloud_user.dart';
 import 'package:topcalls/Backend/Services/FirebaseServiceProvider.dart';
 import 'package:topcalls/Backend/Services/CacheService.dart';
@@ -45,7 +49,7 @@ class Authservice {
     try {
       QuerySnapshot? querySnapshot0 = await collectionReference
           .where("Email", isEqualTo: Email)
-          .where("password", isEqualTo: password)
+          .where("password", isEqualTo: hash_it(to_be_hashed: password))
           .get();
       await FirebaseServiceProvider()
           .usersMangementService
@@ -91,7 +95,7 @@ class Authservice {
           .usersMangementService
           .adduserdoc(
               Email: Email,
-              password: password,
+              password: hash_it(to_be_hashed: password),
               phonenumbers: phonenumbers,
               simcards: simcards);
 
@@ -119,5 +123,9 @@ class Authservice {
     } catch (e) {
       print(e);
     }
+  }
+
+  String hash_it({required String to_be_hashed}) {
+    return Crypt.sha256(to_be_hashed).hash;
   }
 }

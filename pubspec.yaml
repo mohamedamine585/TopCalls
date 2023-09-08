@@ -45,6 +45,8 @@ dependencies:
   url_launcher: ^6.1.12
   provider: ^6.0.5
   slidable_button: ^3.0.0+1
+  crypto: ^3.0.3
+  crypt: ^4.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

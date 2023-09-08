@@ -168,12 +168,21 @@ class _RegisterPageState extends State<RegisterPage> {
                           final authservice = Authservice();
                           if (password.text == cnfpassword.text) {
                             if (emailRegExp.hasMatch(email.text)) {
-                              await authservice.Register(
-                                  Email: email.text, password: password.text);
+                              if (password.text.length >= 8) {
+                                await authservice.Register(
+                                    Email: email.text, password: password.text);
 
-                              if (authservice.user != null) {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    "CloudLogsPage", (route) => false);
+                                if (authservice.user != null) {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      "CloudLogsPage", (route) => false);
+                                }
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => show_alert(
+                                        context: context,
+                                        message: "The password is too short",
+                                        button: "Ok"));
                               }
                             } else {
                               showDialog(
