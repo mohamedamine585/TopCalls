@@ -164,86 +164,121 @@ class _SavelogsState extends State<Savelogs> {
                                               : const Color.fromARGB(
                                                   255, 194, 33, 243),
                                       elevation: 4,
-                                      child: Row(
-                                        children: [
-                                          Column(
-                                            children: [
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("Contact name :"),
-                                                  Text(
-                                                    data.elementAt(index).name,
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  const Text("Contact log :"),
-                                                  Text(
-                                                    data
-                                                        .elementAt(index)
-                                                        .number,
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("Total call duration :")
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("Last call :"),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("From device :"),
-                                                  Text(
-                                                    data
-                                                        .elementAt(index)
-                                                        .fromdevice,
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: screenwidth * 0.001,
-                                          ),
-                                          Checkbox(
-                                              value: data
-                                                  .elementAt(index)
-                                                  .is_saved,
-                                              onChanged: (onChanged) {
-                                                setState(() {
-                                                  data[index].is_saved =
-                                                      onChanged!;
-                                                  should_reload = false;
-                                                });
-                                              })
-                                        ],
+                                      child: Container(
+                                        width: screenwidth * 0.95,
+                                        child: Row(
+                                          children: [
+                                            Column(
+                                              children: [
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Container(
+                                                  width: screenwidth * 0.6,
+                                                  child: Row(
+                                                    children: [
+                                                      Text("Contact name :"),
+                                                      Text(
+                                                        data
+                                                            .elementAt(index)
+                                                            .name,
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Container(
+                                                  width: screenwidth * 0.6,
+                                                  child: Row(
+                                                    children: [
+                                                      const Text(
+                                                          "Contact log :"),
+                                                      Text(
+                                                        data
+                                                            .elementAt(index)
+                                                            .number,
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Container(
+                                                  width: screenwidth * 0.6,
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                          "Total call duration :"),
+                                                      Text(data
+                                                          .elementAt(index)
+                                                          .total_call_duration
+                                                          .toString())
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Container(
+                                                  width: screenwidth * 0.6,
+                                                  child: Row(
+                                                    children: [
+                                                      const Text("Last call :"),
+                                                      Text((data
+                                                              .elementAt(index)
+                                                              .lastcall
+                                                              ?.toDate())
+                                                          .toString())
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: screenwidth * 0.6,
+                                                  child: Row(
+                                                    children: [
+                                                      const Text(
+                                                          "From device :"),
+                                                      Text(
+                                                        data
+                                                            .elementAt(index)
+                                                            .fromdevice,
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              width: screenwidth * 0.001,
+                                            ),
+                                            Checkbox(
+                                                value: data
+                                                    .elementAt(index)
+                                                    .is_saved,
+                                                onChanged: (onChanged) {
+                                                  setState(() {
+                                                    data[index].is_saved =
+                                                        onChanged!;
+                                                    should_reload = false;
+                                                  });
+                                                })
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );

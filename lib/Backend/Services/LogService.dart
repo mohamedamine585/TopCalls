@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:topcalls/Backend/Modules/Cloud_Contact.dart';
 import 'package:topcalls/Backend/Consts.dart';
 import 'package:call_log/call_log.dart';
@@ -16,6 +17,8 @@ class LogsService {
           listcontact.add(Cloud_Log(
               number: element.number ?? "",
               name: element.name ?? "",
+              lastcall:
+                  Timestamp.fromMillisecondsSinceEpoch(element.timestamp ?? 0),
               fromdevice: DEVICE_ID ?? "",
               is_saved: false,
               total_call_duration: element.duration));

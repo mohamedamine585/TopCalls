@@ -23,8 +23,6 @@ class _SigninPageState extends State<SigninPage> {
     super.dispose();
   }
 
-  final user = Authservice().user;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +31,7 @@ class _SigninPageState extends State<SigninPage> {
           child: Column(
             children: [
               SizedBox(
-                height: screenlength / 6,
+                height: screenlength / 10,
               ),
               const Text(
                 "Sign in",
@@ -45,13 +43,13 @@ class _SigninPageState extends State<SigninPage> {
               Row(
                 children: [
                   SizedBox(
-                    width: screenwidth / 13,
+                    width: screenwidth / 7,
                   ),
                   Column(
                     children: [
                       Text(
                         "Email",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 15),
                       ),
                       SizedBox(
                         height: 5,
@@ -61,7 +59,8 @@ class _SigninPageState extends State<SigninPage> {
                 ],
               ),
               Container(
-                width: screenwidth * 0.86,
+                width: screenwidth * 0.7,
+                height: screenlength * 0.1,
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -79,14 +78,14 @@ class _SigninPageState extends State<SigninPage> {
               Row(
                 children: [
                   SizedBox(
-                    width: screenwidth / 13,
+                    width: screenwidth / 7,
                   ),
                   const Column(
                     children: [
                       Text(
                         "Password",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                       const SizedBox(
@@ -97,10 +96,11 @@ class _SigninPageState extends State<SigninPage> {
                 ],
               ),
               Container(
+                height: screenlength * 0.1,
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
-                width: screenwidth * 0.86,
+                width: screenwidth * 0.7,
                 child: TextField(
                   controller: password,
                   obscureText: true,
@@ -132,18 +132,24 @@ class _SigninPageState extends State<SigninPage> {
                               Email: email.text,
                               password: password.text);
 
-                          if (user != null) {
+                          if (Authservice().user != null) {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 "CloudLogsPage", (route) => false);
                           } else {
-                            print(user);
+                            showDialog(
+                                context: context,
+                                builder: (context) => show_alert(
+                                    context: context,
+                                    message: "User not found !",
+                                    button: "Ok"));
                           }
                         } else {
                           showDialog(
                             context: context,
                             builder: (context) => show_alert(
                                 context: context,
-                                message: "Check your internet connection"),
+                                message: "Check your internet connection",
+                                button: "Ok"),
                           );
                         }
                       },
@@ -175,10 +181,10 @@ class _SigninPageState extends State<SigninPage> {
                         style: TextStyle(fontSize: 18, color: Colors.black),
                       ))),
               SizedBox(
-                height: 70,
+                height: screenlength / 15,
               ),
               Container(
-                  height: screenlength * 0.1,
+                  height: screenlength * 0.15,
                   width: screenwidth * 0.7,
                   child: Text(
                       "Sync your logs in the cloud and never worry about losing them again. Securely store and effortlessly retrieve your logs whenever you need them.")),

@@ -8,6 +8,7 @@ class Cloud_Log {
   bool? is_saved;
   int? total_call_duration;
   Timestamp? lastcall;
+  bool? is_blacklisted;
 
   Cloud_Log(
       {required this.number,
@@ -15,7 +16,8 @@ class Cloud_Log {
       required this.fromdevice,
       this.is_saved,
       this.total_call_duration,
-      this.lastcall});
+      this.lastcall,
+      this.is_blacklisted});
 
   static List<Cloud_Log>? gather_logs({required dynamic data}) {
     try {
@@ -45,12 +47,14 @@ class Cloud_Log {
     final fromdev = data["fromdevice"];
     final total = data["totalcallduration"];
     final issaved = data["issaved"];
+    final is_black = data["black_list"];
 
     return Cloud_Log(
         number: number,
         name: name,
         fromdevice: fromdev,
         is_saved: issaved,
-        total_call_duration: total);
+        total_call_duration: total,
+        is_blacklisted: is_black);
   }
 }

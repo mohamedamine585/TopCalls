@@ -6,6 +6,7 @@ import 'package:topcalls/Frontend/AlertDialogs.dart';
 import 'package:topcalls/Frontend/AuthenticationDialog.dart';
 import 'package:topcalls/Frontend/CloudLogs.dart';
 import 'package:topcalls/Frontend/Consts.dart';
+import 'package:topcalls/Frontend/RegisterDialog.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -17,8 +18,6 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
-    screenwidth = MediaQuery.of(context).size.width;
-    screenlength = MediaQuery.of(context).size.height;
     return FutureBuilder(
       future: FirebaseServiceProvider().connect(),
       builder: (context, snapshot) {
@@ -29,7 +28,7 @@ class _HomepageState extends State<Homepage> {
           return const CloudLogsPage();
         } else {
           return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
+              body: Center(child: const CircularProgressIndicator()));
         }
       },
     );

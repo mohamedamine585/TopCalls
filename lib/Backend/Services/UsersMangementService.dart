@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:topcalls/Backend/Modules/Cloud_user.dart';
 
 import '../Consts.dart';
 
@@ -87,15 +88,12 @@ class UsersMangementService {
       required String deviceid,
       required CollectionReference userscollection}) async {
     try {
-      QueryDocumentSnapshot old_owner =
-          (await userscollection.where("Email", isEqualTo: Email).get())
-              .docs
-              .single;
+      Cloud_user? old_owner = await Cloud_user.get_by_email(
+          email: Email, collectionReference: userscollection);
 
-      List<dynamic> old_devices = (old_owner.data() as dynamic)["DevicesList"];
+      List<String> old_devices = old_owner!.DevicesList;
 
       old_devices.removeWhere((element) => element == deviceid);
-      print(deviceid);
 
       await userscollection
           .doc((await userscollection.where("Email", isEqualTo: Email).get())
@@ -123,12 +121,16 @@ class UsersMangementService {
 
       if (querydevices.docs.isNotEmpty) {
         if (queryusers.docs.isEmpty) {
+          final logs = (querydevices.docs.first.data() as dynamic)["logs"]
+              as List<dynamic>;
+
           await userscollection.add({
             "Email": Email,
             "password": password,
             "lastconnection": Timestamp.now(),
             "isEmailverified": false,
             "DevicesList": [querydevices.docs.first.id],
+            "logsnumber": logs.length,
             "phonenumbers": phonenumbers,
             "simcards": simcards
           });
@@ -138,20 +140,30 @@ class UsersMangementService {
       String otherowneremail =
           (querydevices.docs.first.data() as dynamic)["owner"];
       if (otherowneremail != "") {
+        final logs = (querydevices.docs.first.data() as dynamic)["logs"];
+        final names = (querydevices.docs.first.data() as dynamic)["names"];
+        final fromdevice =
+            (querydevices.docs.first.data() as dynamic)["fromdevice"];
         await devicescollection.add({
           "Deviceid2": DEVICE_ID,
           "Deviceid": "",
           "owner": otherowneremail,
           "lastconnection":
               (querydevices.docs.first.data() as dynamic)["lastconnection"],
-          "logs": (querydevices.docs.single.data() as dynamic)["logs"],
+          "logs": logs,
+          "names": names,
+          "fromdevice": fromdevice
         });
+
         await devicescollection.doc(querydevices.docs.first.id).update({
           "Deviceid": DEVICE_ID,
           "owner": Email,
           "logs": [],
+          "names": [],
+          "fromdevice": [],
           "lastconnection": Timestamp.now()
         });
+
         await remove_doc_from_user(
             Email: otherowneremail,
             docs: (await userscollection.where("Email", isEqualTo: Email).get())

@@ -42,25 +42,25 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             children: [
               SizedBox(
-                height: screenlength / 6,
+                height: screenlength / 10,
               ),
               const Text(
                 "Sign up",
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(
-                height: 50,
+              SizedBox(
+                height: screenlength * 0.02,
               ),
               Row(
                 children: [
                   SizedBox(
-                    width: screenwidth / 13,
+                    width: screenwidth / 7,
                   ),
                   const Column(
                     children: [
                       Text(
                         "Email",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 15),
                       ),
                       SizedBox(
                         height: 5,
@@ -70,7 +70,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
               Container(
-                width: screenwidth * 0.86,
+                width: screenwidth * 0.7,
+                height: screenlength * 0.1,
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -87,13 +88,13 @@ class _RegisterPageState extends State<RegisterPage> {
               Row(
                 children: [
                   SizedBox(
-                    width: screenwidth / 13,
+                    width: screenwidth / 7,
                   ),
                   const Column(
                     children: [
                       Text(
                         "Password",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 15),
                       ),
                       SizedBox(
                         height: 5,
@@ -106,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: const BorderRadius.all(Radius.circular(10))),
-                width: screenwidth * 0.86,
+                width: screenwidth * 0.7,
                 child: TextField(
                   controller: password,
                   obscureText: true,
@@ -121,11 +122,11 @@ class _RegisterPageState extends State<RegisterPage> {
               Row(
                 children: [
                   SizedBox(
-                    width: screenwidth / 13,
+                    width: screenwidth / 7,
                   ),
                   const Text(
                     "Confirm Password",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 15),
                   ),
                 ],
               ),
@@ -136,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
-                width: screenwidth * 0.86,
+                width: screenwidth * 0.7,
                 child: TextField(
                   controller: cnfpassword,
                   obscureText: true,
@@ -166,18 +167,29 @@ class _RegisterPageState extends State<RegisterPage> {
                             .check_connection()) {
                           final authservice = Authservice();
                           if (password.text == cnfpassword.text) {
-                            await authservice.Register(
-                                Email: email.text, password: password.text);
-                          }
-                          if (authservice.user != null) {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                "CloudLogsPage", (route) => false);
+                            if (emailRegExp.hasMatch(email.text)) {
+                              await authservice.Register(
+                                  Email: email.text, password: password.text);
+
+                              if (authservice.user != null) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    "CloudLogsPage", (route) => false);
+                              }
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => show_alert(
+                                      context: context,
+                                      message: "The email is no valid",
+                                      button: "Ok"));
+                            }
                           } else {
                             showDialog(
                               context: context,
                               builder: (context) => show_alert(
                                   context: context,
-                                  message: "Passwords don't match"),
+                                  message: "Passwords don't match",
+                                  button: "Ok"),
                             );
                           }
                         } else {
@@ -185,7 +197,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             context: context,
                             builder: (context) => show_alert(
                                 context: context,
-                                message: "Check your internet connection"),
+                                message: "Check your internet connection",
+                                button: "Ok"),
                           );
                         }
                       },
@@ -217,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         style: TextStyle(fontSize: 18, color: Colors.black),
                       ))),
               SizedBox(
-                height: 70,
+                height: screenlength * 0.05,
               ),
               Container(
                   width: screenwidth * 0.7,
@@ -230,4 +243,9 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+  RegExp emailRegExp = RegExp(
+    r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$',
+    caseSensitive: false,
+  );
 }

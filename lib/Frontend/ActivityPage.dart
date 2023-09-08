@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:slidable_button/slidable_button.dart';
 import 'package:topcalls/Backend/Services/AuthService.dart';
 import 'package:topcalls/Frontend/Consts.dart';
 import 'package:topcalls/Frontend/NavigationDrawer.dart';
@@ -70,7 +69,7 @@ class _ActivityPageState extends State<ActivityPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Text("145"),
+                        Text(user!.logs_number.toString()),
                       ],
                     ),
                   ),
@@ -88,7 +87,7 @@ class _ActivityPageState extends State<ActivityPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Text("145"),
+                        Text(user.black_listed_number.toString()),
                       ],
                     ),
                   ),

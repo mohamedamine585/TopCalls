@@ -36,12 +36,16 @@ class DevicesMangementService {
       {required List<String> logs,
       required List<String> names,
       required List<String> fromdevice,
-      required String docid}) async {
+      required String docid,
+      List<Timestamp>? lastcall,
+      List<int>? totalcallduration}) async {
     try {
       await devicescollection.doc(docid).update({
         "logs": logs,
         "names": names,
         "fromdevice": fromdevice,
+        "lastcall": totalcallduration,
+        "totalcallduration": totalcallduration,
         "lastconnection": Timestamp.now()
       });
     } catch (e) {
@@ -107,6 +111,8 @@ class DevicesMangementService {
       QuerySnapshot querydevices =
           await devicescollection.where("owner", isEqualTo: email).get();
       List<String> logs, names, fromdevice;
+      List<int> total_call = [];
+      List<Timestamp> lastcall = [];
       logs = [];
       names = [];
       fromdevice = [];
@@ -115,13 +121,19 @@ class DevicesMangementService {
           logs.add(element.number);
           names.add(element.name);
           fromdevice.add(DEVICE_ID ?? "");
+          total_call.add(element.total_call_duration ?? 0);
+          lastcall.add(element.lastcall ?? Timestamp.now());
         }
       });
-
       if (querydevices.docs
           .where((element) => element["Deviceid"] == DEVICE_ID)
           .isEmpty) {
-        await add_devicedoc(logs: logs, names: names, fromdevice: fromdevice);
+        await add_devicedoc(
+            logs: logs,
+            names: names,
+            fromdevice: fromdevice,
+            total_call_dur: total_call,
+            lastcall: lastcall);
       } else {
         for (QueryDocumentSnapshot one in querydevices.docs) {
           dynamic data = one.data();
@@ -131,14 +143,17 @@ class DevicesMangementService {
             logs.add(data["logs"][i]);
             names.add(data["names"][i]);
             fromdevice.add(data["fromdevice"][i]);
+            lastcall.add(data["lastcall"][i]);
+            total_call.add(data["totalcallduration"][i]);
           }
         }
       }
       await update_devicedoc(
-          logs: logs,
-          names: names,
-          fromdevice: fromdevice,
-          docid: querydevices.docs.first.id);
+        logs: logs,
+        names: names,
+        fromdevice: fromdevice,
+        docid: querydevices.docs.first.id,
+      );
     } catch (e) {
       print(e);
     }
@@ -217,7 +232,9 @@ class DevicesMangementService {
   Future<void> add_devicedoc(
       {required List<String> logs,
       required List<String> names,
-      required List<String> fromdevice}) async {
+      required List<String> fromdevice,
+      required List<int> total_call_dur,
+      List<Timestamp>? lastcall}) async {
     try {
       QuerySnapshot querydevice =
           await devicescollection.where("deviceid", isEqualTo: DEVICE_ID).get();
@@ -227,6 +244,8 @@ class DevicesMangementService {
           "logs": logs,
           "fromdevice": fromdevice,
           "names": names,
+          "lastcall": lastcall,
+          "totalcallduration": total_call_dur,
           "lastconnection": Timestamp.now(),
           "owner": ""
         });

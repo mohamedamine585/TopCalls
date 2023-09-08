@@ -49,9 +49,7 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
         elevation: 0,
         title: Row(
           children: [
-            const SizedBox(
-              width: 90,
-            ),
+            SizedBox(width: screenwidth * 0.17),
             const Text(
               "Top Logs",
               style: const TextStyle(
@@ -163,6 +161,7 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                                   element.number.contains(filter.text))
                               .toList() ??
                           [];
+
                       return RefreshIndicator(
                           onRefresh: () async {
                             setState(() {});
@@ -229,10 +228,23 @@ class _CloudLogsPageState extends State<CloudLogsPage> {
                                             const SizedBox(
                                               height: 5,
                                             ),
-                                            Row(
-                                              children: [
-                                                Text("Total call duration :")
-                                              ],
+                                            Container(
+                                              width: screenwidth * 0.95,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Total call duration :",
+                                                    softWrap: true,
+                                                  ),
+                                                  Text(
+                                                    data
+                                                        .elementAt(index)
+                                                        .total_call_duration
+                                                        .toString(),
+                                                    softWrap: true,
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                             const SizedBox(
                                               height: 5,

@@ -17,31 +17,8 @@ class Authservice {
     try {
       String? Email = await CacheService().ProoveAction("Email");
       if (Email != null && Email != "") {
-        QuerySnapshot querySnapshot = await collectionReference
-            .where("Email", isEqualTo: Email)
-            .limit(1)
-            .get();
-        final mobiledata = await FirebaseServiceProvider()
-            .systemmangementprovider
-            .get_mobile_data();
-
-        List<String> phonenumbers = [], simcards = [];
-        mobiledata?.forEach((element) {
-          phonenumbers.add(element.key);
-          simcards.add(element.value);
-        });
-
-        final phone_numbers = (querySnapshot.docs.first.data()
-            as Map<String, dynamic>)["phonenumbers"];
-        final sim_cards = (querySnapshot.docs.first.data()
-            as Map<String, dynamic>)["sim_cards"];
-        if (phone_numbers == null) {
-          await collectionReference
-              .doc(querySnapshot.docs.first.id)
-              .update({"phonenumbers": phonenumbers, "simcards": simcards});
-        }
-        user = Cloud_user.from_firebase(
-            data: querySnapshot.docs.first.data() as Map<String, dynamic>);
+        user = await Cloud_user.get_by_email(
+            email: Email, collectionReference: collectionReference);
       } else {
         user = null;
       }

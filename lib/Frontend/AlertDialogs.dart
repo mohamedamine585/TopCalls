@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:topcalls/Frontend/Consts.dart';
 
 AlertDialog show_alert(
-    {required BuildContext context, required String message}) {
+    {required BuildContext context,
+    required String message,
+    required String button}) {
   return AlertDialog(
     title: const Text("TopLogs"),
     content: Text("$message"),
     actions: [
       Container(
-          width: screenwidth * 0.1,
+          width: screenwidth * 0.15,
           height: 50,
           child: TextButton(
               style: ButtonStyle(
@@ -20,9 +22,10 @@ AlertDialog show_alert(
               onPressed: () async {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                "Save",
-                style: TextStyle(fontSize: 18, color: Colors.black),
+              child: Text(
+                button,
+                style: TextStyle(
+                    fontSize: screenwidth * 0.15 / 3, color: Colors.black),
               ))),
     ],
   );
